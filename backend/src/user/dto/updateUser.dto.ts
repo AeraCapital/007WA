@@ -6,6 +6,5 @@ export class UpdateUserDto {
     middleName?: string;
     lastName?: string;
     email?: string;
-    password?: string;
     role?: USER_ROLE;
 }
