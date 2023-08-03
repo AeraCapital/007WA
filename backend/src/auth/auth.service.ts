@@ -23,9 +23,12 @@ export class AuthService {
     ) { }
 
     async validateUser (email: string, pass: string): Promise<any> {
-        const user = await this.userRepository.findOne({
-            where: { email: email }
-        });
+        const user = await this.userRepository.createQueryBuilder("user")
+            .where("user.email = :email", { email: email })
+            .addSelect("user.password")
+            .getOne();
+
+
 
         if (user && bcrypt.compareSync(pass, user.password)) {
             const { password, ...result } = user;
@@ -59,7 +62,7 @@ export class AuthService {
     async changePassword (email: string, changePasswordDto: ChangePasswordDto): Promise<void> {
         const { oldPassword, newPassword } = changePasswordDto;
         const user = await this.validateUser(email, oldPassword);
-        console.log(email)
+        console.log(email);
 
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
