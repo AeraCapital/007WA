@@ -1,4 +1,3 @@
-import { WhatsappSession } from 'src/whatsapp/entities/whatsapp-session.entity';
 import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from 'typeorm';
 
 export enum USER_ROLE {
@@ -37,7 +36,10 @@ export class User {
     })
     role: USER_ROLE;
 
-    @OneToOne(() => WhatsappSession)
-    @JoinColumn()
-    whatsappSession: WhatsappSession;
+    @Column({ nullable: true })
+    whatsappNumber: string;
+
+    @Column({default:false})
+    activeWhatsappSession: boolean
+
 }
