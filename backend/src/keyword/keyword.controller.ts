@@ -12,8 +12,7 @@ export class KeywordController {
     @UsePipes(new ValidationPipe({ transform: true }))
     setKeyword (@Body() setKeywordDto: SetKeywordDto) {
         console.log(setKeywordDto);
-        this.keywordReplyService.setKeyword(setKeywordDto);
-        return { status: 'Keyword set successfully' };
+        return this.keywordReplyService.setKeyword(setKeywordDto);
     }
 
     @Put(':id')
