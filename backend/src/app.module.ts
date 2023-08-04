@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { KeywordModule } from './keyword/keyword.module';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { KeywordModule } from './keyword/keyword.module';
     }),
     UserModule,
     AuthModule,
-    KeywordModule
+    KeywordModule,
+    WhatsappModule
   ],
   controllers: [ AppController ],
   providers: [ AppService ],
