@@ -12,19 +12,12 @@ services:
     depends_on:
       - sassy-db
       - browser
-
-  whatsapp-service:
-    build:
-      context: .
-      dockerfile: ./whatsapp-service/Dockerfile
-    depends_on:
-      - browser
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: janakiran
       POSTGRES_DB: sassyapple
       BROWSER_URL: 'ws://browser:3001'
-
+      
   sassy-db:
     image: postgres:13
     restart: always

@@ -7,6 +7,8 @@ import { LocalAuth, Client as WhatsAppClient } from 'whatsapp-web.js';
 import { UpdateUserDto } from 'src/user/dto/updateUser.dto';
 import { WhatsappGateway } from './whatsapp.gateway';
 import { WhatsappMessages } from './entities/whatsapp-messages.entity';
+import { User } from 'src/user/entities/user.entity';
+import { KeywordService } from 'src/keyword/keyword.service';
 
 @Injectable()
 export class WhatsappService {
@@ -16,7 +18,8 @@ export class WhatsappService {
         @InjectRepository(WhatsappMessages)
         private whatsappMessagesRepository: Repository<WhatsappMessages>,
         private userService: UserService,
-        private whatsappGateway: WhatsappGateway
+        private whatsappGateway: WhatsappGateway,
+        private keywordService: KeywordService
     ) { }
 
     async createSessionForUser (userId: string) {
@@ -43,6 +46,7 @@ export class WhatsappService {
         });
 
         client.on('qr', (qr) => {
+            console.log(qr);
             this.whatsappGateway.server.emit('qr', { sessionId: user.id, qr });
         });
 
@@ -56,12 +60,12 @@ export class WhatsappService {
                 newMessage.to = this.cleanNumbers(msg.to);
                 newMessage.messageTimestamp = msg.timestamp;
                 newMessage.user = user;
-                console.log(msg);
+
                 await this.whatsappMessagesRepository.save(newMessage);
 
                 this.whatsappGateway.server.emit('message', { sessionId: user.id, message: msg.body, from: msg.from });
 
-                this.handleReplies(msg.from, msg.body)
+                this.handleReplies(msg.from, msg.body, user, msg.to);
             }
         });
 
@@ -86,9 +90,25 @@ export class WhatsappService {
     }
 
 
-    handleReplies(from:string, body:string){
-        
+    async handleReplies (from: string, body: string, user: User, to: string) {
+
+        let reply = await this.keywordService.getReply(body);
+        if (!reply) {
+            reply = "I couldn't understand your query. Our customer support representative will connect with you in a moment.";
+        }
+        this.sendMessage(user.id, from, reply);
+
+        const newMessage = await this.whatsappMessagesRepository.create();
+        newMessage.body = reply;
+        newMessage.from = this.cleanNumbers(to);
+        newMessage.to = this.cleanNumbers(from);
+        newMessage.messageTimestamp = 1;
+        newMessage.user = user;
+
+        await this.whatsappMessagesRepository.save(newMessage);
+
     }
+
     async sendMessage (sessionId: string, to: string, message: string) {
         const client = this.getClient(sessionId);
 

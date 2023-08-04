@@ -32,7 +32,15 @@ export class KeywordService {
         return this.keywordRepository.find({});
     }
 
-    async getReply (keyword: string) {
-        return ((await this.keywordRepository.findOneBy({ keyword: keyword })).reply);
+    async getReply (message: string) {
+        const keywords = await this.findAll();
+
+        for (const kr of keywords) {
+            if (message.includes(kr.keyword)) {
+                // If the message includes the keyword, send the associated reply
+                return kr.reply
+                break;
+            }
+        }
     }
 }
