@@ -1,20 +1,34 @@
-// whatsapp/whatsapp.gateway.ts
-
+// whatsapp.gateway.ts
 import {
+  SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
   OnGatewayInit,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-import { WhatsappService } from './whatsapp.service';
+import { Logger } from '@nestjs/common';
+import { Socket, Server } from 'socket.io';
 
 @WebSocketGateway()
-export class WhatsappGateway implements OnGatewayInit {
+export class WhatsappGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
+  private logger: Logger = new Logger('WhatsappGateway');
 
-  constructor(private whatsappService: WhatsappService) {}
+  @SubscribeMessage('msgToServer')
+  handleMessage(client: Socket, text: string): void {
+    this.server.emit('msgToClient', text);
+  }
 
-  afterInit() {
-    this.whatsappService.initializeServer(this.server);
+  afterInit(server: Server): void {
+    this.logger.log('Socket.io server initialized');
+  }
+
+  handleConnection(client: Socket, ...args: any[]): void {
+    this.logger.log(`Client connected: ${client.id}`);
+  }
+
+  handleDisconnect(client: Socket): void {
+    this.logger.log(`Client disconnected: ${client.id}`);
   }
 }

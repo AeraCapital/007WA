@@ -8,8 +8,9 @@ export class WhatsappSession {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('json')
-    data: any;
+    @Column({ default: false })
+    isActive: boolean;
+
 
     @OneToOne(() => User, user => user.whatsappSession)
     user: User;

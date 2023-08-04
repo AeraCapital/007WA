@@ -2,9 +2,9 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
     type: 'postgres',
-    host: 'sassy-db',
+    host: 'localhost',
     port: 5432,
-    username: 'postgres',
+    username: 'swornim',
     password: 'janakiran',
     database: 'sassyapple',
     entities: [ "dist/**/*.entity{.ts,.js}" ],
