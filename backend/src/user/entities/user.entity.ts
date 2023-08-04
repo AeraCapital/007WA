@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { WhatsappSession } from 'src/whatsapp/entities/whatsapp-session.entity';
+import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from 'typeorm';
 
 export enum USER_ROLE {
     ADMIN = 'admin',
@@ -35,4 +36,8 @@ export class User {
         default: USER_ROLE.AGENT
     })
     role: USER_ROLE;
+
+    @OneToOne(() => WhatsappSession)
+    @JoinColumn()
+    whatsappSession: WhatsappSession;
 }
