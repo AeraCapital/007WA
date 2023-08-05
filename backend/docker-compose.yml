@@ -28,7 +28,7 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '6432:5432'
 
   browser:
     image: browserless/chrome:latest
