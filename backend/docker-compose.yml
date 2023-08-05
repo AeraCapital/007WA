@@ -16,7 +16,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: janakiran
       POSTGRES_DB: sassyapple
-      BROWSER_URL: 'ws://browser:3001'
+      BROWSER_URL: 'ws://browser:3000'
       
   sassy-db:
     image: postgres:13
@@ -50,4 +50,4 @@ services:
       MAX_CONCURRENT_SESSIONS: 1
       DEFAULT_USER_DATA_DIR: /usr/src/app/user-data-dir
     ports:
-      - 3001:3001
+      - 3001:3000

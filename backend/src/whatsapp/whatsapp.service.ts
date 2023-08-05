@@ -12,7 +12,8 @@ import { KeywordService } from 'src/keyword/keyword.service';
 
 @Injectable()
 export class WhatsappService {
-    private clients: { [ id: string ]: WhatsAppClient; } = {};
+    private clients: { [ id: string ]: WhatsAppClient; } = {
+    };
 
     constructor (
         @InjectRepository(WhatsappMessages)
@@ -24,20 +25,18 @@ export class WhatsappService {
 
     async createSessionForUser (userId: string) {
         const user = await this.userService.findOne(userId);
-
         if (!user) {
             throw new Error(`User with ID "${ userId }" not found`);
         }
 
         const client = new WhatsAppClient({
-            authStrategy: new LocalAuth({ clientId: userId }),
+            authStrategy: new LocalAuth({ clientId: user.id }),
             puppeteer: {
                 headless: true,
                 args: [ '--no-sandbox' ],
-                // browserWSEndpoint: process.env.BROWSER_URL,
+                browserWSEndpoint: process.env.BROWSER_URL,
             },
         });
-
 
         client.on('authenticated', async (data) => {
             console.log(data);
@@ -52,8 +51,6 @@ export class WhatsappService {
 
         client.on('message', async msg => {
             if (msg.type == 'chat') {
-
-
                 const newMessage = this.whatsappMessagesRepository.create();
                 newMessage.body = msg.body;
                 newMessage.from = this.cleanNumbers(msg.from);
@@ -75,8 +72,8 @@ export class WhatsappService {
 
         });
 
+        client.initialize().catch((e) => console.log(e))
 
-        client.initialize();
 
         this.clients[ user.id ] = client;
     }
@@ -125,5 +122,4 @@ export class WhatsappService {
         const user = await this.userService.findOne(id);
         return this.whatsappMessagesRepository.findBy({ user: user });
     }
-
 }

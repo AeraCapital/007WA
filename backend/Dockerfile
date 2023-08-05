@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy package.json and yarn.lock to Docker environment
 COPY package.json yarn.lock ./
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    
 # Install all dependencies and build bcrypt in the Docker environment
 RUN yarn install
 
