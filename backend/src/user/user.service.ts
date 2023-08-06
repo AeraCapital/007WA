@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { User } from './entities/user.entity';
+import { USER_ROLE, User } from './entities/user.entity';
 import { CreateUserDto, UserLoginDto } from './dto/user.dto';
 import { compare, hash } from 'bcryptjs';
 import { UserRepository } from './repositories/user.repository';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { CreateAgentDto } from './dto/createAgent.dto';
 
 @Injectable()
 export class UserService {
@@ -47,6 +48,17 @@ export class UserService {
             throw new Error('User not found');
         }
 
+        return this.usersRepository.save(user);
+    }
+
+    async getAgents (): Promise<User[]> {
+        return this.usersRepository.findBy({ role: USER_ROLE.AGENT });
+    }
+
+    async createAgent (createAgentDto: CreateAgentDto): Promise<User> {
+        const password = 'agent123';
+        const hashedPassword = await hash(password, 10);
+        const user = this.usersRepository.create({ ...createAgentDto, password: hashedPassword, role: USER_ROLE.AGENT });
         return this.usersRepository.save(user);
     }
 }
