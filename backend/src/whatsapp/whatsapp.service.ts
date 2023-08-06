@@ -39,9 +39,7 @@ export class WhatsappService {
         });
 
         client.on('authenticated', async (data) => {
-            console.log(data);
-
-            // this.whatsappGateway.server.emit('authentication', sess);
+            this.whatsappGateway.server.emit('authentication', { 'status': true });
         });
 
         client.on('qr', (qr) => {
@@ -60,7 +58,7 @@ export class WhatsappService {
 
                 await this.whatsappMessagesRepository.save(newMessage);
 
-                this.whatsappGateway.server.emit('message', { sessionId: user.id, message: msg.body, from: msg.from });
+                this.whatsappGateway.server.emit(`${ user.id }_message`, newMessage);
 
                 this.handleReplies(msg.from, msg.body, user, msg.to);
             }
@@ -72,7 +70,7 @@ export class WhatsappService {
 
         });
 
-        client.initialize().catch((e) => console.log(e))
+        client.initialize().catch((e) => console.log(e));
 
 
         this.clients[ user.id ] = client;
@@ -103,6 +101,7 @@ export class WhatsappService {
         newMessage.user = user;
 
         await this.whatsappMessagesRepository.save(newMessage);
+        this.whatsappGateway.server.emit(`${ user.id }_autoreply`, newMessage);
 
     }
 

@@ -16,19 +16,19 @@ export class WhatsappGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   private logger: Logger = new Logger('WhatsappGateway');
 
   @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, text: string): void {
-    this.server.emit('msgToClient', text);
+  handleMessage (client: Socket, text: string): void {
+    console.log(text);
   }
 
-  afterInit(server: Server): void {
+  afterInit (server: Server): void {
     this.logger.log('Socket.io server initialized');
   }
 
-  handleConnection(client: Socket, ...args: any[]): void {
-    this.logger.log(`Client connected: ${client.id}`);
+  handleConnection (client: Socket, ...args: any[]): void {
+    this.logger.log(`Client connected: ${ client.id }`);
   }
 
-  handleDisconnect(client: Socket): void {
-    this.logger.log(`Client disconnected: ${client.id}`);
+  handleDisconnect (client: Socket): void {
+    this.logger.log(`Client disconnected: ${ client.id }`);
   }
 }
