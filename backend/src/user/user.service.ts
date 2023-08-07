@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { USER_ROLE, User } from './entities/user.entity';
@@ -45,7 +45,15 @@ export class UserService {
     async updateUser (id: string, updateUserDto: UpdateUserDto): Promise<User> {
         const user = await this.usersRepository.preload({ id: id, ...updateUserDto });
         if (!user) {
-            throw new Error('User not found');
+            throw new NotFoundException(`User with ID ${ id } not found`);
+        }
+        if (updateUserDto.email) {
+            const existingUser = await this.usersRepository.findOneBy({ email: updateUserDto.email });
+
+
+            if (existingUser) {
+                throw new ConflictException(`User with email '${ updateUserDto.email }' already exists`);
+            }
         }
 
         return this.usersRepository.save(user);
@@ -56,9 +64,17 @@ export class UserService {
     }
 
     async createAgent (createAgentDto: CreateAgentDto): Promise<User> {
+
+        const existingAgent = await this.usersRepository.findOneBy({ email: createAgentDto.email });
+
+        if (existingAgent) {
+            throw new ConflictException(`User with email '${ createAgentDto.email }' already exists`);
+        }
+
         const password = 'agent123';
         const hashedPassword = await hash(password, 10);
         const user = this.usersRepository.create({ ...createAgentDto, password: hashedPassword, role: USER_ROLE.AGENT });
         return this.usersRepository.save(user);
+
     }
 }

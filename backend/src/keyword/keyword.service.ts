@@ -35,7 +35,7 @@ export class KeywordService {
         if (existingKeyword) {
             throw new ConflictException(`Keyword '${ setKeywordDto.keyword }' already exists`);
         }
-        
+
         const updatedKeywordReply = this.keywordRepository.merge(keywordReply, setKeywordDto);
         return this.keywordRepository.save(updatedKeywordReply);
     }

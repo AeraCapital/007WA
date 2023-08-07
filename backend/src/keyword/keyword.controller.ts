@@ -14,7 +14,7 @@ export class KeywordController {
     async setKeyword (@Body() setKeywordDto: SetKeywordDto) {
         try {
             const data = await this.keywordReplyService.setKeyword(setKeywordDto);
-            return { statusCode: HTTP_STATUS.CREATED, data };
+            return { statusCode: HTTP_STATUS.CREATED, data, message:"Keyword Created!" };
 
         } catch (err) {
 
