@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from 'typeorm';
 
 export enum USER_ROLE {
     ADMIN = 'admin',
@@ -35,4 +35,11 @@ export class User {
         default: USER_ROLE.AGENT
     })
     role: USER_ROLE;
+
+    @Column({ nullable: true })
+    whatsappNumber: string;
+
+    @Column({default:false})
+    activeWhatsappSession: boolean
+
 }

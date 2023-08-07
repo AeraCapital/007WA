@@ -2,7 +2,9 @@
 /dist
 /node_modules
 /data
-
+/session
+.wwebjs_auth/
+.wwebjs_cache/
 # Logs
 logs
 *.log
@@ -34,3 +36,5 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+

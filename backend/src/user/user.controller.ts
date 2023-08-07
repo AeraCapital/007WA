@@ -15,6 +15,7 @@ import { CreateUserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { CreateAgentDto } from './dto/createAgent.dto';
 
 
 @Controller('user')
@@ -44,5 +45,25 @@ export class UserController {
         const { id } = request.user;
 
         return this.userService.updateUser(id, updateUserDto);
+    }
+
+
+    @Post('agent')
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async createAgent (@Body() createAgentDto: CreateAgentDto): Promise<User> {
+        return this.userService.createAgent(createAgentDto);
+    }
+
+    @Put('agent/:id')
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async editAgent (@Body() updateUserDto: UpdateUserDto, @Param('id') id: string): Promise<User> {
+        return this.userService.updateUser(id, updateUserDto);
+    }
+    @Get('agents')
+    @UseGuards(JwtAuthGuard)
+    async getAgents (): Promise<User[]> {
+        return this.userService.getAgents();
     }
 }

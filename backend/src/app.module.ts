@@ -8,6 +8,8 @@ import { typeOrmConfig } from './common/typeorm/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { KeywordModule } from './keyword/keyword.module';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '1h' },
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    KeywordModule,
+    WhatsappModule
   ],
   controllers: [ AppController ],
   providers: [ AppService ],
