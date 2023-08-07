@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
-import { LocalAuth, Client as WhatsAppClient } from 'whatsapp-web.js';
+import { LocalAuth, Client } from 'whatsapp-web.js';
 import { UpdateUserDto } from 'src/user/dto/updateUser.dto';
 import { WhatsappGateway } from './whatsapp.gateway';
 import { WhatsappMessages } from './entities/whatsapp-messages.entity';
@@ -12,7 +12,7 @@ import { KeywordService } from 'src/keyword/keyword.service';
 
 @Injectable()
 export class WhatsappService {
-    private clients: { [ id: string ]: WhatsAppClient; } = {
+    private clients: { [ id: string ]: Client; } = {
     };
 
     constructor (
@@ -22,7 +22,7 @@ export class WhatsappService {
         private whatsappGateway: WhatsappGateway,
         private keywordService: KeywordService
     ) {
-        this.initializeAll();
+        // this.initializeAll();
     }
 
     async createSessionForUser (userId: string) {
@@ -30,8 +30,8 @@ export class WhatsappService {
         if (!user) {
             throw new Error(`User with ID "${ userId }" not found`);
         }
-
-        const client = new WhatsAppClient({
+        console.log(user.id)
+        const client = new Client({
             authStrategy: new LocalAuth({ clientId: user.id }),
             puppeteer: {
                 headless: true,
@@ -41,13 +41,13 @@ export class WhatsappService {
         });
 
         client.on('authenticated', async (data) => {
-            this.whatsappGateway.server.emit('authentication', { success: true });
+            this.whatsappGateway.sendDirectMessage(user.id, { type: 'authentication', success: true });
         });
 
         client.on('qr', (qr) => {
             console.log(qr);
             this.userService.updateWhatsappSession(user.id, false);
-            this.whatsappGateway.server.emit('qr', { sessionId: user.id, qr });
+            this.whatsappGateway.sendDirectMessage(user.id, { type: 'qr', sessionId: user.id, qr });
         });
 
         client.on('message', async msg => {
@@ -62,7 +62,7 @@ export class WhatsappService {
 
                 await this.whatsappMessagesRepository.save(newMessage);
 
-                this.whatsappGateway.server.emit(`${ user.id }_message`, newMessage);
+                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', newMessage });
 
                 this.handleReplies(msg.from, msg.body, user, msg.to);
             }
@@ -72,7 +72,8 @@ export class WhatsappService {
             console.log('Client is ready!');
 
             this.userService.updateWhatsappSession(user.id, true);
-            this.whatsappGateway.server.emit('ready', { status: true });
+            this.whatsappGateway.sendDirectMessage(user.id, { type: 'ready', success: true });
+
 
         });
 
@@ -80,7 +81,7 @@ export class WhatsappService {
             console.log("Authentication Failed!");
             this.userService.updateWhatsappSession(user.id, false);
 
-            this.whatsappGateway.server.emit('authentication', { success: false });
+            this.whatsappGateway.sendDirectMessage(user.id, { type: 'authentication', success: false });
         });
 
         client.initialize().catch((e) => console.log(e));
@@ -89,7 +90,7 @@ export class WhatsappService {
         this.clients[ user.id ] = client;
     }
 
-    getClient (id: string): WhatsAppClient {
+    getClient (id: string): Client {
         return this.clients[ id ];
     }
 
@@ -114,7 +115,7 @@ export class WhatsappService {
         newMessage.user = user;
 
         await this.whatsappMessagesRepository.save(newMessage);
-        this.whatsappGateway.server.emit(`${ user.id }_autoreply`, newMessage);
+        this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
 
     }
 

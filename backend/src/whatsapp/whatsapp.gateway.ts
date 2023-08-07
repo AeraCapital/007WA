@@ -20,6 +20,17 @@ export class WhatsappGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     console.log(text);
   }
 
+  @SubscribeMessage('join')
+  handleJoin (client: Socket, userId: string): void {
+    client.join(userId);
+    this.logger.log(`User ${ userId } joined room ${ userId }`);
+  }
+
+
+  sendDirectMessage (userId: string, message: any): void {
+    this.server.to(userId).emit(userId, message);
+  }
+
   afterInit (server: Server): void {
     this.logger.log('Socket.io server initialized');
   }
