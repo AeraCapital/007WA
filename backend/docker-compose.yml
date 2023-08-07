@@ -30,7 +30,7 @@ services:
       - ./data:/var/lib/postgresql/data
     ports:
       - '6432:5432'
-2333ee36-cefa-4322-a74e-f2e849e13dac
+
   browser:
     image: browserless/chrome:latest
     hostname: browser
