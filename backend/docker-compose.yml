@@ -17,6 +17,7 @@ services:
       POSTGRES_PASSWORD: janakiran
       POSTGRES_DB: sassyapple
       BROWSER_URL: 'ws://browser:3000'
+      FROM_EMAIL: dev@dhoon.co
       
   sassy-db:
     image: postgres:13

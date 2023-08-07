@@ -7,12 +7,14 @@ import { compare, hash } from 'bcryptjs';
 import { UserRepository } from './repositories/user.repository';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { CreateAgentDto } from './dto/createAgent.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
     constructor (
         @InjectRepository(User)
-        private readonly usersRepository: UserRepository
+        private readonly usersRepository: UserRepository,
+        private mailService: MailService
     ) { }
 
     async create (createUserDto: CreateUserDto): Promise<User> {
@@ -71,10 +73,28 @@ export class UserService {
             throw new ConflictException(`User with email '${ createAgentDto.email }' already exists`);
         }
 
+
         const password = 'agent123';
         const hashedPassword = await hash(password, 10);
-        const user = this.usersRepository.create({ ...createAgentDto, password: hashedPassword, role: USER_ROLE.AGENT });
-        return this.usersRepository.save(user);
+        const user = await this.usersRepository.create({ ...createAgentDto, password: hashedPassword, role: USER_ROLE.AGENT });
+        const data = this.usersRepository.save(user);
+
+
+        var mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: user.email,
+            subject: 'Agent Account Credentials',
+            text: 'password : ' + password,
+        };
+        try {
+            await this.mailService.sendMail(mailOptions);
+        } catch (err) {
+            console.log(err);
+        }
+
+
+        return data;
+
 
     }
 }
