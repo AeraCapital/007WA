@@ -21,7 +21,9 @@ export class WhatsappService {
         private userService: UserService,
         private whatsappGateway: WhatsappGateway,
         private keywordService: KeywordService
-    ) { }
+    ) {
+        this.initializeAll();
+    }
 
     async createSessionForUser (userId: string) {
         const user = await this.userService.findOne(userId);
@@ -39,15 +41,17 @@ export class WhatsappService {
         });
 
         client.on('authenticated', async (data) => {
-            this.whatsappGateway.server.emit('authentication', { 'status': true });
+            this.whatsappGateway.server.emit('authentication', { success: true });
         });
 
         client.on('qr', (qr) => {
             console.log(qr);
+            this.userService.updateWhatsappSession(user.id, false);
             this.whatsappGateway.server.emit('qr', { sessionId: user.id, qr });
         });
 
         client.on('message', async msg => {
+
             if (msg.type == 'chat') {
                 const newMessage = this.whatsappMessagesRepository.create();
                 newMessage.body = msg.body;
@@ -66,8 +70,17 @@ export class WhatsappService {
 
         client.on('ready', async () => {
             console.log('Client is ready!');
+
+            this.userService.updateWhatsappSession(user.id, true);
             this.whatsappGateway.server.emit('ready', { status: true });
 
+        });
+
+        client.on('auth_failure', async () => {
+            console.log("Authentication Failed!");
+            this.userService.updateWhatsappSession(user.id, false);
+
+            this.whatsappGateway.server.emit('authentication', { success: false });
         });
 
         client.initialize().catch((e) => console.log(e));
@@ -120,5 +133,13 @@ export class WhatsappService {
 
         const user = await this.userService.findOne(id);
         return this.whatsappMessagesRepository.findBy({ user: user });
+    }
+
+    async initializeAll () {
+        const users = await this.userService.usersWithActiveSesssions();
+
+        if (users.length > 0) {
+            users.forEach(user => this.createSessionForUser(user.id).then(() => console.log("Initialized for user", user.id)));
+        }
     }
 }

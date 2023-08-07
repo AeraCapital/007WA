@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcryptjs';
@@ -44,7 +44,7 @@ export class AuthService {
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        console.log(user);
+
         const payload = { user };
         return {
             user: user,
@@ -62,7 +62,6 @@ export class AuthService {
     async changePassword (email: string, changePasswordDto: ChangePasswordDto): Promise<void> {
         const { oldPassword, newPassword } = changePasswordDto;
         const user = await this.validateUser(email, oldPassword);
-        console.log(email);
 
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
@@ -77,8 +76,7 @@ export class AuthService {
         const user = await this.userRepository.findOneBy({ email });
 
         if (!user) {
-            // Optionally, you can return a more generic error message here to avoid revealing the existence of the email in the system.
-            throw new UnauthorizedException('User not found');
+            throw new NotFoundException('User not found');
         }
 
         // Generate a unique reset token and save it in the user entity

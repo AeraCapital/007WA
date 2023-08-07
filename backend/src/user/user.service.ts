@@ -61,6 +61,16 @@ export class UserService {
         return this.usersRepository.save(user);
     }
 
+    async updateWhatsappSession (id: string, status: boolean) {
+        const user = await this.usersRepository.preload({ id: id });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${ id } not found`);
+        }
+        user.activeWhatsappSession = status;
+        this.usersRepository.save(user);
+
+    }
+
     async getAgents (): Promise<User[]> {
         return this.usersRepository.findBy({ role: USER_ROLE.AGENT });
     }
@@ -96,5 +106,9 @@ export class UserService {
         return data;
 
 
+    }
+
+    async usersWithActiveSesssions () {
+        return this.usersRepository.findBy({ activeWhatsappSession: true });
     }
 }
