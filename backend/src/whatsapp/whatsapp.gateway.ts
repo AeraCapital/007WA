@@ -10,7 +10,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class WhatsappGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('WhatsappGateway');

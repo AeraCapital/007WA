@@ -11,8 +11,9 @@ export class WhatsappController {
   @Post('create-session')
   @UseGuards(JwtAuthGuard)
   createSessionForUser (@Request() request) {
-    const { userId } = request.user;
-    return this.whatsappService.createSessionForUser(userId);
+    const { id } = request.user;
+
+    return this.whatsappService.createSessionForUser(id);
   }
 
   @Get('messages')

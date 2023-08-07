@@ -48,7 +48,6 @@ services:
       CHROME_PATH: '/usr/bin/google-chrome'
       USE_CHROME_STABLE: 'true'
       NODE_ENV: 'production'
-      MAX_CONCURRENT_SESSIONS: 1
       DEFAULT_USER_DATA_DIR: /usr/src/app/user-data-dir
     ports:
       - 3001:3000
