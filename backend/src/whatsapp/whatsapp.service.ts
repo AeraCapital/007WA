@@ -14,7 +14,7 @@ import { KeywordService } from 'src/keyword/keyword.service';
 export class WhatsappService {
     private clients: { [ id: string ]: Client; } = {
     };
-
+    
     constructor (
         @InjectRepository(WhatsappMessages)
         private whatsappMessagesRepository: Repository<WhatsappMessages>,
@@ -22,21 +22,29 @@ export class WhatsappService {
         private whatsappGateway: WhatsappGateway,
         private keywordService: KeywordService
     ) {
-        // this.initializeAll();
+        this.initializeAll();
     }
 
     async createSessionForUser (userId: string) {
+
+        console.log("Printing clients\n\n\n")
+        console.log(this.clients)
         const user = await this.userService.findOne(userId);
         if (!user) {
             throw new Error(`User with ID "${ userId }" not found`);
         }
-        console.log(user.id)
+
         const client = new Client({
-            authStrategy: new LocalAuth({ clientId: user.id }),
+            authStrategy: new LocalAuth({
+                clientId: user.id,
+                dataPath: `/usr/src/app/user-data-dir/${ user.id }`,
+            }),
             puppeteer: {
                 headless: true,
-                args: [ '--no-sandbox' ],
-                browserWSEndpoint: process.env.BROWSER_URL,
+                args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
+                handleSIGINT: false,
+                executablePath:'/usr/bin/chromium'
+
             },
         });
 
@@ -53,6 +61,8 @@ export class WhatsappService {
         client.on('message', async msg => {
 
             if (msg.type == 'chat') {
+                console.log(msg.body)
+                console.log(user.id)
                 const newMessage = this.whatsappMessagesRepository.create();
                 newMessage.body = msg.body;
                 newMessage.from = this.cleanNumbers(msg.from);
@@ -88,6 +98,7 @@ export class WhatsappService {
 
 
         this.clients[ user.id ] = client;
+        console.log(this.clients)
     }
 
     getClient (id: string): Client {
