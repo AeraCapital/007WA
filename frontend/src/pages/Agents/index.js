@@ -76,7 +76,7 @@ const Agents = () => {
   }, [dispatch]);
 
   //meta title
-  document.title = "Data Tables | Dhoon";
+  document.title = "Agents | ";
 
   return (
     <React.Fragment>
@@ -84,7 +84,7 @@ const Agents = () => {
       <AddAgentModal isOpen={displayAddModal} closeModal={closeAddModal} />
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Dhoon" breadcrumbItem="agents" />
+          <Breadcrumbs title="" breadcrumbItem="agents" />
           <Row>
             <Col>
               <Card>

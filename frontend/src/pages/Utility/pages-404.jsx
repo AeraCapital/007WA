@@ -7,7 +7,7 @@ import error from "../../assets/images/error-img.png";
 
 const Pages404 = () => {
   //meta title
-  document.title = "404 Error Page | Dhoon";
+  document.title = "404 Error Page | ";
 
   return (
     <React.Fragment>

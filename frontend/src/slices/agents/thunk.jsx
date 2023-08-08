@@ -1,9 +1,9 @@
-import { postAddAgent, fetchAgents, updateAgent } from "../../helpers/backend_helper.js";
+import { fetchAgents, postAddAgent, updateAgent } from "../../helpers/backend_helper.js";
 import {
-  addAgentSuccessful,
   addAgentFailed,
-  fetchAgentsSuccessful,
+  addAgentSuccessful,
   fetchAgentsFailed,
+  fetchAgentsSuccessful,
   startLoading,
   updateAgentFailed,
   updateAgentSuccess,
@@ -11,28 +11,19 @@ import {
 
 export const addAgent = (data) => async (dispatch) => {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      console.log("Adding Agent", data);
-      dispatch(startLoading()); // Dispatch the addAgentPending action before the API call
-      const response = await postAddAgent(data);
-      console.log(response);
-      dispatch(addAgentSuccessful(response));
-    } else {
-      console.log("Todo");
-    }
+    dispatch(startLoading());
+    const response = await postAddAgent(data);
+    dispatch(addAgentSuccessful(response.data));
   } catch (error) {
-    console.log("Error from Agent", error);
     dispatch(addAgentFailed(error));
   }
 };
 
 export const fetchAgentsList = () => async (dispatch) => {
   try {
-    console.log("Fetching Agents");
     dispatch(startLoading());
-    const response = await fetchAgents(); // Assuming this function handles the API call to fetch agents
-    console.log(response);
-    dispatch(fetchAgentsSuccessful(response));
+    const response = await fetchAgents();
+    dispatch(fetchAgentsSuccessful(response.data));
   } catch (error) {
     dispatch(fetchAgentsFailed(error));
   }
@@ -40,10 +31,9 @@ export const fetchAgentsList = () => async (dispatch) => {
 
 export const editAgent = (data, id) => async (dispatch) => {
   try {
-    console.log("Editing Agent");
     dispatch(startLoading());
     const response = await updateAgent(data, id);
-    dispatch(updateAgentSuccess(response));
+    dispatch(updateAgentSuccess(response.data));
   } catch (error) {
     dispatch(updateAgentFailed(error));
   }

@@ -24,7 +24,8 @@ import LogoIcon from "Components/LogoIcon";
 import profile from "../../assets/images/profile-img.png";
 
 //import thunk
-import { loginUser, resetLoginMsgFlag } from "slices/auth/login/thunk";
+import { loginUser } from "slices/auth/login/thunk";
+import { resetLoginFlag } from "slices/auth/login/reducer";
 
 import withRouter from "Components/Common/withRouter";
 
@@ -32,7 +33,7 @@ const Login = (props) => {
   const dispatch = useDispatch();
 
   //meta title
-  document.title = "Login | Dhoon";
+  document.title = "Login";
 
   const { error, loading } = useSelector((state) => ({
     error: state.Login.error,
@@ -55,7 +56,7 @@ const Login = (props) => {
   useEffect(() => {
     if (error) {
       setTimeout(() => {
-        dispatch(resetLoginMsgFlag());
+        dispatch(resetLoginFlag());
       }, 2000);
     }
   }, [dispatch, error]);
@@ -72,7 +73,7 @@ const Login = (props) => {
                     <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to Sassy Apple.</p>
+                        <p>Sign in.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">

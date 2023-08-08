@@ -8,7 +8,7 @@ import logo from "../../assets/images/logo-dark.png";
 
 const PagesMaintenance = () => {
   //meta title
-  document.title = "Maintenance | Dhoon";
+  document.title = "Maintenance | ";
 
   return (
     <React.Fragment>

@@ -31,6 +31,7 @@ import Keywords from "pages/Keywords";
 import Agents from "pages/Agents";
 import Playground from "pages/AuthenticationInner/page-confirm-mail";
 import Whatsapp from "pages/Whatsapp";
+import Chat from "pages/Chat";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -40,6 +41,7 @@ const authProtectedRoutes = [
   { path: "/keywords", component: <Keywords /> },
   { path: "/agents", component: <Agents /> },
   { path: "/whatsapp", component: <Whatsapp /> },
+  { path: "/message", component: <Chat /> },
   // { path: "/playground", component: <EcommerceOrder /> },
   { path: "/", exact: true, component: <Navigate to="/dashboard" /> },
 ];

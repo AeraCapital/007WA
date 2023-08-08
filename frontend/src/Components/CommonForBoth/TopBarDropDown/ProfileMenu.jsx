@@ -24,7 +24,6 @@ const ProfileMenu = (props) => {
   useEffect(() => {
     const obj = JSON.parse(localStorage.getItem("authUser") || "");
     setFirstName(obj.user.firstName);
-    console.log("Trying to change!!");
   }, [success]);
 
   return (

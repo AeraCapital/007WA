@@ -19,7 +19,7 @@ import { addKeyword } from "../../slices/keywords/thunk";
 
 const AddKeywordModal = ({ isOpen, closeModal }) => {
   //meta title
-  document.title = "Add Keyword | Dhoon";
+  document.title = "Add Keyword | ";
 
   const dispatch = useDispatch();
 

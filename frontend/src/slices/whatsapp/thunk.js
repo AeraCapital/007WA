@@ -1,18 +1,13 @@
 import { postCreateSession } from "../../helpers/backend_helper.js";
-import { startLoading, connectionSuccess } from "./reducer";
+import { connectionError, connectionSuccess, startLoading } from "./reducer";
 
-export const connectWhatsapp = (data) => async (dispatch) => {
+export const createSession = (data) => async (dispatch) => {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      dispatch(startLoading()); // Dispatch the addKeywordPending action before the API call
-      let response = await postCreateSession(data);
-      console.log("here", response);
-      dispatch(connectionSuccess());
-    } else {
-      console.log("Todo");
-    }
+    dispatch(startLoading());
+    await postCreateSession(data);
+    console.log("Session created");
+    dispatch(connectionSuccess());
   } catch (error) {
-    console.log("Error from Keyword", error);
-    // dispatch(addKeywordFailed(error));
+    dispatch(connectionError(error));
   }
 };

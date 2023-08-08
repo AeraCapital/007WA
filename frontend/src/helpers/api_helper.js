@@ -1,7 +1,8 @@
 import axios from "axios";
 
 // default
-axios.defaults.baseURL = "https://sassy-apple-dev.dhoon.co"; // "http://localhost:3002"; //"http://13.126.89.32:3002/";
+// axios.defaults.baseURL = "http://localhost:3002";
+axios.defaults.baseURL = "https://sassy-apple-dev.dhoon.co";
 
 // content type
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -15,7 +16,7 @@ axios.interceptors.response.use(
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    let message;
+    let message = "Something went wrong";
     console.log("From Interceptior", error);
     switch (error.response?.data.statusCode) {
       case 500:
@@ -25,7 +26,8 @@ axios.interceptors.response.use(
         message = error.response.data.message || "Invalid Credentials";
         break;
       case 404:
-        message = "Sorry! the data you are looking for could not be found";
+        message =
+          error.response.data.message || "Sorry! the data you are looking for could not be found";
         break;
       case 400:
         message = error.response.data.message[0] || "Something went wrong.";
@@ -34,7 +36,7 @@ axios.interceptors.response.use(
         message = error.response.data.message || "Something went wrong.";
         break;
       default:
-        message = error.response.data.message || error.message || error;
+        message = error.message || "Something went wrong";
     }
     return Promise.reject(message);
   }
@@ -78,7 +80,7 @@ class APIClient {
     } else {
       response = axios.get(`${url}`, params);
     }
-    return response.then((object) => object.data);
+    return response;
   };
   /**
    * post given data to url
@@ -96,7 +98,7 @@ class APIClient {
 
   put = (url, data) => {
     setAuthorization();
-    return axios.put(url, data).then((object) => object.data);
+    return axios.put(url, data);
   };
 
   delete = (url, config) => {

@@ -21,7 +21,6 @@ const AgentsSlice = createSlice({
       state.success = null;
     },
     addAgentSuccessful(state, action) {
-      console.log("Payload:", action.payload);
       state.data.push(action.payload);
       state.loading = false;
       state.success = true;

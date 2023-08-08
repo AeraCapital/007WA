@@ -162,6 +162,13 @@ const SidebarContent = (props) => {
               </Link>
             </li>
 
+            <li>
+              <Link to="/message">
+                <i className="bx bx-chat"></i>
+                <span>{props.t("Messages")}</span>
+              </Link>
+            </li>
+
             {/* <li className="menu-title">{props.t("Apps")}</li> */}
           </ul>
         </div>
