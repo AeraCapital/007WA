@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // default
-axios.defaults.baseURL = "http://13.126.89.32:3002/"; // "http://localhost:3002"; //"http://13.126.89.32:3002/";
+axios.defaults.baseURL = "https://sassy-apple-dev.dhoon.co"; // "http://localhost:3002"; //"http://13.126.89.32:3002/";
 
 // content type
 axios.defaults.headers.post["Content-Type"] = "application/json";
