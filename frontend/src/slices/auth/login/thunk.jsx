@@ -1,26 +1,18 @@
-import { postFakeLogin, postJwtLogin } from "helpers/fakebackend_helper";
-import {
-  loginError,
-  loginSuccess,
-  logoutUserSuccess,
-  resetLoginFlag,
-  startLoading,
-} from "./reducer";
+import { postJwtLogin } from "helpers/backend_helper";
+import { loginError, loginSuccess, logoutUserSuccess, startLoading } from "./reducer";
 
 export const loginUser = (credentials, history) => async (dispatch) => {
   try {
-    let response;
-    if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      dispatch(startLoading());
-      response = await postJwtLogin(credentials);
+    dispatch(startLoading());
+    let response = await postJwtLogin(credentials);
+    console.log("Login Response:", response);
+    if (response.data) {
       localStorage.setItem("authUser", JSON.stringify(response.data));
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
-      console.log("Login From Fake Server");
-      response = await postFakeLogin(credentials);
-      localStorage.setItem("authUser", JSON.stringify(response));
+      dispatch(loginSuccess(response.data));
+      history("/dashboard");
+    } else {
+      dispatch(loginError("Something went wrong. Try again later"));
     }
-    dispatch(loginSuccess(response));
-    history("/dashboard");
   } catch (error) {
     console.log(error);
     console.log("Error here!");
@@ -31,13 +23,4 @@ export const loginUser = (credentials, history) => async (dispatch) => {
 export const logoutUser = () => async (dispatch) => {
   localStorage.removeItem("authUser");
   dispatch(logoutUserSuccess(true));
-};
-
-export const resetLoginMsgFlag = () => {
-  try {
-    const response = resetLoginFlag();
-    return response;
-  } catch (error) {
-    return error;
-  }
 };

@@ -27,7 +27,7 @@ import { resetFlags } from "slices/auth/changepwd/reducer";
 
 const ChangePassword = () => {
   //meta title
-  document.title = "Change Password | Dhoon";
+  document.title = "Change Password | ";
 
   const dispatch = useDispatch();
 

@@ -6,7 +6,7 @@ import Breadcrumbs from "../../Components/Common/Breadcrumb";
 
 const PagesStarter = () => {
   //meta title
-  document.title = "Stater Page | Dhoon";
+  document.title = "Stater Page | ";
 
   return (
     <React.Fragment>

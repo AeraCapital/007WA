@@ -23,21 +23,20 @@ import { registerUser } from "../../slices/thunk";
 //redux
 import { useDispatch, useSelector } from "react-redux";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import withRouter from "Components/Common/withRouter";
 import LogoIcon from "Components/LogoIcon";
 
 // import images
+import { resetFlags } from "slices/auth/register/reducer";
 import profileImg from "../../assets/images/profile-img.png";
 
-const Register = () => {
+const Register = (props) => {
   //meta title
-  document.title = "Signup | Dhoon";
+  document.title = "Signup | ";
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -57,23 +56,25 @@ const Register = () => {
       lastName: Yup.string().required("Please Enter Your Last Name"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
-    onSubmit: (values) => dispatch(registerUser(values)),
+    onSubmit: (values) => dispatch(registerUser(values, props.router.navigate)),
   });
 
   const { loading, successMsg, errorMsg } = useSelector((state) => ({
     loading: state.Register.loading,
-    successMsg: state.Register.successMsg,
     errorMsg: state.Register.errorMsg,
   }));
 
   useEffect(() => {
     if (successMsg) {
-      console.log("is being triggered");
       validation.resetForm();
-      navigate("/login");
+    }
+    if (errorMsg) {
+      setTimeout(() => {
+        dispatch(resetFlags());
+      }, 2000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successMsg]);
+  }, [successMsg, errorMsg]);
 
   return (
     <React.Fragment>
@@ -111,7 +112,6 @@ const Register = () => {
                         return false;
                       }}>
                       {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : null}
-                      {successMsg ? <Alert color="danger">{successMsg}</Alert> : null}
 
                       {/* First Name */}
                       <div className="mb-3">

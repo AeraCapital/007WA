@@ -9,7 +9,7 @@ import ProfileMenu from "../../Components/CommonForBoth/TopBarDropDown/ProfileMe
 
 // import images
 
-import logoLightSvg from "../../assets/images/logo-light.svg";
+// import logoLightSvg from "../../assets/images/logo-light.svg";
 
 //i18n
 import { withTranslation } from "react-i18next";
@@ -66,11 +66,11 @@ const Header = (props) => {
         <div className="navbar-header">
           <div className="d-flex">
             <div className="navbar-brand-box d-lg-none d-md-block">
-              <Link to="/" className="logo logo-light">
+              {/* <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
                   <img src={logoLightSvg} alt="" height="22" />
                 </span>
-              </Link>
+              </Link> */}
             </div>
 
             <button

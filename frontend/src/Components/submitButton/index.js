@@ -1,4 +1,4 @@
-import { Spinner } from "reactstrap"; // You can use any loading spinner component/library you prefer.
+import { Spinner } from "reactstrap"; 
 
 const Button = ({ isLoading, children, ...rest }) => {
   return (

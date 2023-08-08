@@ -63,8 +63,12 @@ const Keywords = () => {
     dispatch(fetchKeywordsList());
   }, [dispatch]);
 
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
+
   //meta title
-  document.title = "Data Tables | Dhoon";
+  document.title = "Keywords | ";
 
   return (
     <React.Fragment>
@@ -72,7 +76,7 @@ const Keywords = () => {
       <AddKeywordModal isOpen={displayAddModal} closeModal={closeAddModal} />
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Dhoon" breadcrumbItem="Keywords" />
+          <Breadcrumbs title="" breadcrumbItem="Keywords" />
           <Row>
             <Col>
               <Card>

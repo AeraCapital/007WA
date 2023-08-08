@@ -29,15 +29,13 @@ import { editProfile, resetProfileFlag } from "slices/thunk";
 
 const UserProfile = () => {
   //meta title
-  document.title = "Profile | Dhoon";
+  document.title = "Profile | ";
 
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
   const [firstName, setfirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [id, setid] = useState("1");
 
   const { error, success, loading } = useSelector((state) => ({
     loading: state.Profile.loading,
@@ -48,20 +46,15 @@ const UserProfile = () => {
   useEffect(() => {
     if (localStorage.getItem("authUser")) {
       const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      console.log(obj);
-
       setfirstName(obj.user.firstName);
       setMiddleName(obj.user.middleName);
       setLastName(obj.user.lastName);
-      setEmail(obj.user.email);
-      setid(obj.user.id);
       if (success || error) {
         setTimeout(() => {
           dispatch(resetProfileFlag());
         }, 3000);
       }
     }
-    console.log("Here");
   }, [dispatch, success, error]);
 
   const validation = useFormik({
@@ -71,8 +64,6 @@ const UserProfile = () => {
       firstName: firstName || "",
       middleName: middleName || "",
       lastName: lastName || "",
-      email: email || "",
-      id: id || "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required("Please Enter Your First Name"),
@@ -80,12 +71,10 @@ const UserProfile = () => {
       lastName: Yup.string().required("Please Enter Your Last Name"),
     }),
     onSubmit: (values) => {
-      console.log(values);
       dispatch(editProfile(values));
     },
   });
 
-  console.log(loading);
   return (
     <React.Fragment>
       <div className="page-content">
@@ -153,9 +142,6 @@ const UserProfile = () => {
                         <FormFeedback type="invalid">{validation.errors.lastName}</FormFeedback>
                       ) : null}
                     </div>
-                    <Input name="id" value={id} type="hidden" />
-                    <Input name="email" value={email} type="hidden" />
-
                     <div className="mt-4">
                       <SubmitButton isLoading={loading}>Update Profile</SubmitButton>
                     </div>

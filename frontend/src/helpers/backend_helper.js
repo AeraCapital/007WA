@@ -12,6 +12,10 @@ export const postJwtLogin = (data) => api.create(url.POST_JWT_LOGIN, data);
 // postForgetPwd
 export const postJwtForgetPwd = (data) => api.create(url.POST_JWT_PASSWORD_FORGET, data);
 
+export const postJwtChangePwd = (data) => {
+  return api.create(url.POST_JWT_PASSWORD_CHANGE, data);
+};
+
 // postResetPwd
 export const postResetPwd = (data, id) => api.create(url.POST_JWT_PASSWORD_RESET + id, data);
 

@@ -23,9 +23,14 @@ const KeywordsSlice = createSlice({
       state.loading = false;
       state.success = true;
     },
+    connectionError(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
-export const { resetFlags, startLoading, connectionSuccess } = KeywordsSlice.actions;
+export const { resetFlags, startLoading, connectionSuccess, connectionError } =
+  KeywordsSlice.actions;
 
 export default KeywordsSlice.reducer;

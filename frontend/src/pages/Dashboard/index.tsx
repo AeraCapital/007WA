@@ -4,7 +4,7 @@ import { Container } from "reactstrap";
 import Breadcrumb from "Components/Common/Breadcrumb";
 
 const Dashboard = () => {
-  document.title = "Dashboards | Dhoon";
+  document.title = "Dashboards | ";
 
   return (
     <React.Fragment>

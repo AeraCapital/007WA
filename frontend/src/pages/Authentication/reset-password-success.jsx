@@ -4,7 +4,7 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 
 const ResetPasswordSuccess = () => {
   //meta title
-  document.title = "Confirm Mail | Dhoon";
+  document.title = "Confirm Mail | ";
 
   return (
     <React.Fragment>

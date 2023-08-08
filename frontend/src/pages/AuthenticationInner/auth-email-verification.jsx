@@ -8,7 +8,7 @@ import logolight from "../../assets/images/logo-light.png";
 
 const EmailVerification = () => {
   //meta title
-  document.title = "Email Verification | Dhoon";
+  document.title = "Email Verification | ";
 
   return (
     <React.Fragment>
@@ -61,7 +61,7 @@ const EmailVerification = () => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Dhoon. Crafted with{" "}
+                  © {new Date().getFullYear()} . Crafted with{" "}
                   <i className="mdi mdi-heart text-danger"></i> by Themesbrand
                 </p>
               </div>

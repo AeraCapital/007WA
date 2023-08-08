@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SubmitButton from "Components/submitButton";
 
 import withRouter from "Components/Common/withRouter";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Formik Validation
 import { useFormik } from "formik";
@@ -36,10 +36,9 @@ const ResetPasswordPage = (props) => {
   const id = props.router.params.id;
 
   //meta title
-  document.title = "Reset Password | Dhoon";
+  document.title = "Reset Password | ";
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -53,7 +52,7 @@ const ResetPasswordPage = (props) => {
       newPassword: Yup.string().required("Please Enter a New Password"),
     }),
 
-    onSubmit: (values) => dispatch(userResetPassword(values, id)),
+    onSubmit: (values) => dispatch(userResetPassword(values, id, props.router.navigate)),
   });
 
   const { loading, errorMsg, successMsg } = useSelector((state) => ({
@@ -65,7 +64,6 @@ const ResetPasswordPage = (props) => {
   useEffect(() => {
     if (successMsg) {
       dispatch(resetFlags());
-      navigate("/reset-password-success");
     }
     if (errorMsg) {
       setTimeout(() => {

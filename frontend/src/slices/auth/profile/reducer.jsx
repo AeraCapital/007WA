@@ -4,7 +4,6 @@ export const initialState = {
   loading: false,
   error: null,
   success: null,
-  user: {},
 };
 
 const ProfileSlice = createSlice({
@@ -17,8 +16,7 @@ const ProfileSlice = createSlice({
       state.success = null;
     },
     profileSuccess(state, action) {
-      state.success = "Profile updated successfully";
-      state.user = action.payload;
+      state.success = action.payload;
       state.loading = false;
     },
     profileError(state, action) {

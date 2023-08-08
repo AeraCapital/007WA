@@ -34,17 +34,14 @@ import profile from "../../assets/images/profile-img.png";
 
 const ForgetPasswordPage = (props) => {
   //meta title
-  document.title = "Forget Password | Dhoon";
+  document.title = "Forget Password | ";
 
   const dispatch = useDispatch();
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
-    initialValues: {
-      email: "",
-    },
+    initialValues: { email: "" },
 
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email").required("Please Enter Your Email"),
@@ -60,13 +57,14 @@ const ForgetPasswordPage = (props) => {
   }));
 
   useEffect(() => {
-    if (errorMsg) {
+    if (errorMsg || successMsg) {
       setTimeout(() => {
         dispatch(resetFlags());
       }, 2000);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successMsg, errorMsg]);
+  }, [errorMsg, successMsg]);
 
   return (
     <React.Fragment>
