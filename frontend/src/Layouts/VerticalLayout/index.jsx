@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import
-  {
-    changeLayout,
-    changeLayoutMode,
-    changeLeftSidebarTheme,
-    changeLeftSidebarType,
-    changeSidebarImageType,
-    changeTopbarTheme,
-  } from "slices/layouts/thunk";
+import {
+  changeLayout,
+  changeLayoutMode,
+  changeLeftSidebarTheme,
+  changeLeftSidebarType,
+  changeSidebarImageType,
+  changeTopbarTheme,
+} from "slices/layouts/thunk";
 import withRouter from "../../Components/Common/withRouter";
 import Footer from "./Footer";
 import Header from "./Header";

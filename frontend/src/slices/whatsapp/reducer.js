@@ -4,6 +4,8 @@ const initialState = {
   loading: false,
   error: null,
   success: null,
+  contacts: [],
+  messages: [],
 };
 
 const KeywordsSlice = createSlice({
@@ -23,6 +25,14 @@ const KeywordsSlice = createSlice({
       state.loading = false;
       state.success = true;
     },
+    getContactsSuccess(state, action) {
+      state.loading = false;
+      state.contacts = action.payload;
+    },
+    getMessagesSuccess(state, action) {
+      state.loading = false;
+      state.messages = action.payload;
+    },
     connectionError(state, action) {
       state.loading = false;
       state.error = action.payload;
@@ -30,7 +40,13 @@ const KeywordsSlice = createSlice({
   },
 });
 
-export const { resetFlags, startLoading, connectionSuccess, connectionError } =
-  KeywordsSlice.actions;
+export const {
+  resetFlags,
+  startLoading,
+  connectionSuccess,
+  connectionError,
+  getContactsSuccess,
+  getMessagesSuccess,
+} = KeywordsSlice.actions;
 
 export default KeywordsSlice.reducer;

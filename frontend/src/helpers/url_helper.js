@@ -22,3 +22,5 @@ export const PUT_UPDATE_PROFILE = "/user/";
 
 // Chat
 export const CREATE_SESSION = "/whatsapp/create-session/";
+export const GET_CONTACTS = "/whatsapp/contacts/";
+export const GET_MESSAGE = "/whatsapp/messages/";
