@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from 'typeorm';
+import { WhatsAppAccount } from 'src/whatsapp/entities/whatsapp-account.entity';
+import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, OneToMany } from 'typeorm';
 
 export enum USER_ROLE {
     ADMIN = 'admin',
@@ -39,7 +40,9 @@ export class User {
     @Column({ nullable: true })
     whatsappNumber: string;
 
-    @Column({default:false})
-    activeWhatsappSession: boolean
+    @Column({ default: false })
+    activeWhatsappSession: boolean;
 
+    @OneToMany(() => WhatsAppAccount, (account) => account.owner)
+    contacts: WhatsAppAccount;
 }

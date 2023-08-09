@@ -1,14 +1,14 @@
 // whatsapp/whatsapp.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { LocalAuth, Client } from 'whatsapp-web.js';
-import { UpdateUserDto } from 'src/user/dto/updateUser.dto';
 import { WhatsappGateway } from './whatsapp.gateway';
 import { WhatsappMessages } from './entities/whatsapp-messages.entity';
 import { User } from 'src/user/entities/user.entity';
 import { KeywordService } from 'src/keyword/keyword.service';
+import { WhatsAppAccount } from './entities/whatsapp-account.entity';
 
 @Injectable()
 export class WhatsappService {
@@ -18,6 +18,10 @@ export class WhatsappService {
     constructor (
         @InjectRepository(WhatsappMessages)
         private whatsappMessagesRepository: Repository<WhatsappMessages>,
+
+        @InjectRepository(WhatsAppAccount)
+        private readonly accountRepository: Repository<WhatsAppAccount>,
+
         private userService: UserService,
         private whatsappGateway: WhatsappGateway,
         private keywordService: KeywordService
@@ -26,9 +30,6 @@ export class WhatsappService {
     }
 
     async createSessionForUser (userId: string) {
-
-        console.log("Printing clients\n\n\n");
-        console.log(this.clients);
         const user = await this.userService.findOne(userId);
         if (!user) {
             throw new Error(`User with ID "${ userId }" not found`);
@@ -62,12 +63,13 @@ export class WhatsappService {
         client.on('message', async msg => {
 
             if (msg.type == 'chat') {
-                console.log(msg.body);
-                console.log(user.id);
+
+                const clientAccount = await this.getWhatsappAccountFromNumber(msg.from, user);
+
                 const newMessage = this.whatsappMessagesRepository.create();
                 newMessage.body = msg.body;
-                newMessage.from = this.cleanNumbers(msg.from);
-                newMessage.to = this.cleanNumbers(msg.to);
+                newMessage.client = clientAccount;
+                newMessage.type = 'in';
                 newMessage.messageTimestamp = msg.timestamp;
                 newMessage.user = user;
 
@@ -121,9 +123,8 @@ export class WhatsappService {
 
         const newMessage = await this.whatsappMessagesRepository.create();
         newMessage.body = reply;
-        newMessage.from = this.cleanNumbers(to);
-        newMessage.to = this.cleanNumbers(from);
-        newMessage.messageTimestamp = 1;
+        newMessage.type = 'out';
+        newMessage.messageTimestamp = 12345;
         newMessage.user = user;
 
         await this.whatsappMessagesRepository.save(newMessage);
@@ -142,10 +143,33 @@ export class WhatsappService {
         }
     }
 
-    async getMessages (id: string) {
+    async getMessages (id: string, accountId) {
 
         const user = await this.userService.findOne(id);
-        return this.whatsappMessagesRepository.findBy({ user: user });
+        if (!user) {
+            throw new NotFoundException(`User with id ${ id } Not Found!`);
+        }
+
+        const account = await this.accountRepository.findOne({
+            where: {
+                owner: {
+                    id: user.id
+                },
+                id: accountId
+            }
+        });
+
+        if (!account) {
+            throw new NotFoundException(`Acount with id ${ accountId } Not Found!`);
+        }
+        console.log(account);
+        return await this.whatsappMessagesRepository.find({
+            where: {
+
+                user: user,
+                client: account
+            }
+        });
     }
 
     async initializeAll () {
@@ -154,5 +178,34 @@ export class WhatsappService {
         if (users.length > 0) {
             users.forEach(user => this.createSessionForUser(user.id).then(() => console.log("Initialized for user", user.id)));
         }
+    }
+
+    async createWhatsappAccount (accountData: Partial<WhatsAppAccount>): Promise<WhatsAppAccount> {
+        const account = this.accountRepository.create(accountData);
+        return this.accountRepository.save(account);
+    }
+
+    async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
+        let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone) } });
+
+        if (!account) {
+            // Create a new record for the sender if they don't exist
+            account = new WhatsAppAccount();
+            account.phone = this.cleanNumbers(phone);
+            account.owner = owner;
+            await this.accountRepository.save(account);
+        }
+        console.log(account);
+        return account;
+    }
+
+
+    async getClients (id: string) {
+
+        return await this.accountRepository.find({
+            where: {
+                owner: { id: id }
+            }
+        });
     }
 }

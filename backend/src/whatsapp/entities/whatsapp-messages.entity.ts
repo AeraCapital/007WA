@@ -2,6 +2,7 @@
 
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { WhatsAppAccount } from './whatsapp-account.entity';
 
 @Entity()
 export class WhatsappMessages {
@@ -10,16 +11,16 @@ export class WhatsappMessages {
 
 
     @Column()
-    body: string
+    body: string;
+
+    @ManyToOne(() => WhatsAppAccount, (account) => account.messages)
+    client: WhatsAppAccount;
+
+    @Column({ default: 'in' })
+    type: string;
 
     @Column()
-    from: string
-    
-    @Column()
-    to: string
-
-    @Column()
-    messageTimestamp: number
+    messageTimestamp: number;
 
     @ManyToOne(() => User)
     @JoinColumn()
