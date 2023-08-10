@@ -207,15 +207,17 @@ export class WhatsappService {
 
     async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
         let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: owner } });
-
+        console.log(account)
         if (!account) {
+            console.log("Running this")
             // Create a new record for the sender if they don't exist
             account = new WhatsAppAccount();
             account.phone = this.cleanNumbers(phone);
             account.owner = owner;
             await this.accountRepository.save(account);
         }
-        console.log(account);
+
+
         return account;
     }
 
