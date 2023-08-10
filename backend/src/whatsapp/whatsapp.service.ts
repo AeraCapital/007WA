@@ -114,7 +114,7 @@ export class WhatsappService {
 
 
         this.clients[ user.id ] = client;
-        console.log(this.clients);
+
     }
 
     getClient (id: string): Client {
@@ -207,8 +207,7 @@ export class WhatsappService {
 
     async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
         let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: owner } });
-        console.log("<< Accout >>")
-        console.log(account)
+        console.log(owner)
         if (account === null) {
             console.log("Running this")
             // Create a new record for the sender if they don't exist
