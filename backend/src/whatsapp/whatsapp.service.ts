@@ -136,16 +136,13 @@ export class WhatsappService {
             reply = "I couldn't understand your query. Our customer support representative will connect with you in a moment.";
         }
 
-        await this.sendMessage(user, client.phone, reply);
+        await this.sendMessage(user, client, reply);
     }
 
-    async sendMessage (user: User, to: string, message: string) {
+    async sendMessage (user: User, to: WhatsAppAccount, message: string) {
         const client = this.getClient(user.id);
 
         if (user.activeWhatsappSession === true) {
-
-
-            const whatsappAccount = await this.getWhatsappAccountFromNumber(to, user);
 
             if (client) {
                 const newMessage = await this.whatsappMessagesRepository.create();
@@ -153,13 +150,13 @@ export class WhatsappService {
                 newMessage.type = 'out';
                 newMessage.messageTimestamp = 12345;
                 newMessage.user = user;
-                newMessage.client = whatsappAccount;
+                newMessage.client = to;
 
                 await this.whatsappMessagesRepository.save(newMessage).catch(c => console.log(c));
 
                 this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
 
-                return await client.sendMessage(this.wfyNumbers(to), message);
+                return await client.sendMessage(to.phone, message);
             }
 
             else {
