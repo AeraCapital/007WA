@@ -76,7 +76,7 @@ export class WhatsappService {
                 await this.whatsappMessagesRepository.save(newMessage);
 
                 this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data: newMessage });
-
+                console.log("OnMessage", clientAccount);
                 this.handleReplies(clientAccount, msg.body, user, msg.to);
             }
         });
@@ -141,7 +141,7 @@ export class WhatsappService {
 
     async sendMessage (user: User, to: WhatsAppAccount, message: string) {
         const client = this.getClient(user.id);
-
+        console.log("on send message ", to);
         if (user.activeWhatsappSession === true) {
 
             if (client) {
@@ -184,7 +184,7 @@ export class WhatsappService {
         if (!account) {
             throw new NotFoundException(`Acount with id ${ accountId } Not Found!`);
         }
-        console.log(account);
+
         return await this.whatsappMessagesRepository.find({
             where: {
 
@@ -209,9 +209,9 @@ export class WhatsappService {
 
     async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
         let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: owner } });
-        console.log(owner);
+
         if (account === null) {
-            console.log("Running this");
+
             // Create a new record for the sender if they don't exist
             account = new WhatsAppAccount();
             account.phone = this.cleanNumbers(phone);
