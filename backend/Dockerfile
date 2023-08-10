@@ -4,6 +4,8 @@ FROM node:lts
 # Create a new directory in our Docker image for our application's code
 WORKDIR /app
 
+ENV PUPPETEER_SKIP_DOWNLOAD true
+
 # Copy package.json and yarn.lock to Docker environment
 COPY package.json yarn.lock ./
 

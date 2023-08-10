@@ -77,7 +77,7 @@ export class WhatsappService {
 
                 this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', newMessage });
 
-                this.handleReplies(msg.from, msg.body, user, msg.to);
+                this.handleReplies(clientAccount, msg.body, user, msg.to);
             }
         });
 
@@ -97,6 +97,19 @@ export class WhatsappService {
             this.whatsappGateway.sendDirectMessage(user.id, { type: 'authentication', success: false });
         });
 
+        client.on('disconnected', async (data) => {
+            console.log("client disconnected!");
+            // Close the Puppeteer browser
+            if (client.pupBrowser) {
+                await client.pupBrowser.close();
+            }
+
+            // Update user session and send direct message
+            await this.userService.updateWhatsappSession(user.id, false);
+            await this.whatsappGateway.sendDirectMessage(user.id, { type: 'logout', status: true });
+        });
+
+
         client.initialize().catch((e) => console.log(e));
 
 
@@ -112,34 +125,41 @@ export class WhatsappService {
         return id.split('@')[ 0 ];
     }
 
+    wfyNumbers (id: string) {
+        return id + '@c.us';
+    }
 
-    async handleReplies (from: string, body: string, user: User, to: string) {
+    async handleReplies (client: WhatsAppAccount, body: string, user: User, to: string) {
 
         let reply = await this.keywordService.getReply(body);
         if (!reply) {
             reply = "I couldn't understand your query. Our customer support representative will connect with you in a moment.";
         }
-        this.sendMessage(user.id, from, reply);
 
-        const newMessage = await this.whatsappMessagesRepository.create();
-        newMessage.body = reply;
-        newMessage.type = 'out';
-        newMessage.messageTimestamp = 12345;
-        newMessage.user = user;
-
-        await this.whatsappMessagesRepository.save(newMessage);
-        this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
-
+        await this.sendMessage(user, client.phone, reply);
     }
 
-    async sendMessage (sessionId: string, to: string, message: string) {
-        const client = this.getClient(sessionId);
+    async sendMessage (user: User, to: string, message: string) {
+        const client = this.getClient(user.id);
+        const whatsappAccount = await this.getWhatsappAccountFromNumber(to, user);
 
         if (client) {
-            return client.sendMessage(to, message);
+            const newMessage = await this.whatsappMessagesRepository.create();
+            newMessage.body = message;
+            newMessage.type = 'out';
+            newMessage.messageTimestamp = 12345;
+            newMessage.user = user;
+            newMessage.client = whatsappAccount;
+
+            await this.whatsappMessagesRepository.save(newMessage).catch(c => console.log(c));
+
+            this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
+
+            return await client.sendMessage(this.wfyNumbers(to), message);
         }
+
         else {
-            throw new Error('Session not found or not connected');
+            throw new NotFoundException('Session not found or not connected');
         }
     }
 
@@ -186,7 +206,7 @@ export class WhatsappService {
     }
 
     async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
-        let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone) } });
+        let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: owner } });
 
         if (!account) {
             // Create a new record for the sender if they don't exist

@@ -43,7 +43,7 @@
     "rxjs": "^7.2.0",
     "socket.io": "^4.7.2",
     "typeorm": "^0.3.17",
-    "whatsapp-web.js": "^1.21.0",
+    "whatsapp-web.js": "1.22.1",
     "ws": "^8.13.0"
   },
   "devDependencies": {
