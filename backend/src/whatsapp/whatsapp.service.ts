@@ -75,7 +75,7 @@ export class WhatsappService {
 
                 await this.whatsappMessagesRepository.save(newMessage);
 
-                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data:newMessage });
+                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data: newMessage });
 
                 this.handleReplies(clientAccount, msg.body, user, msg.to);
             }
@@ -141,25 +141,30 @@ export class WhatsappService {
 
     async sendMessage (user: User, to: string, message: string) {
         const client = this.getClient(user.id);
-        const whatsappAccount = await this.getWhatsappAccountFromNumber(to, user);
 
-        if (client) {
-            const newMessage = await this.whatsappMessagesRepository.create();
-            newMessage.body = message;
-            newMessage.type = 'out';
-            newMessage.messageTimestamp = 12345;
-            newMessage.user = user;
-            newMessage.client = whatsappAccount;
+        if (user.activeWhatsappSession === true) {
 
-            await this.whatsappMessagesRepository.save(newMessage).catch(c => console.log(c));
 
-            this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
+            const whatsappAccount = await this.getWhatsappAccountFromNumber(to, user);
 
-            return await client.sendMessage(this.wfyNumbers(to), message);
-        }
+            if (client) {
+                const newMessage = await this.whatsappMessagesRepository.create();
+                newMessage.body = message;
+                newMessage.type = 'out';
+                newMessage.messageTimestamp = 12345;
+                newMessage.user = user;
+                newMessage.client = whatsappAccount;
 
-        else {
-            throw new NotFoundException('Session not found or not connected');
+                await this.whatsappMessagesRepository.save(newMessage).catch(c => console.log(c));
+
+                this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
+
+                return await client.sendMessage(this.wfyNumbers(to), message);
+            }
+
+            else {
+                throw new NotFoundException('Session not found or not connected');
+            }
         }
     }
 
@@ -207,9 +212,9 @@ export class WhatsappService {
 
     async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
         let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: owner } });
-        console.log(owner)
+        console.log(owner);
         if (account === null) {
-            console.log("Running this")
+            console.log("Running this");
             // Create a new record for the sender if they don't exist
             account = new WhatsAppAccount();
             account.phone = this.cleanNumbers(phone);
