@@ -98,7 +98,7 @@ export class WhatsappController {
       if (err instanceof NotFoundException) {
         throw new NotFoundException({ statusCode: HTTP_STATUS.NOT_FOUND, message: err.message });
       }
-
+      console.log(err)
       throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
   }
