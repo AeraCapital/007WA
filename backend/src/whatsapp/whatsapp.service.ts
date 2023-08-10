@@ -75,7 +75,7 @@ export class WhatsappService {
 
                 await this.whatsappMessagesRepository.save(newMessage);
 
-                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', newMessage });
+                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data:newMessage });
 
                 this.handleReplies(clientAccount, msg.body, user, msg.to);
             }
