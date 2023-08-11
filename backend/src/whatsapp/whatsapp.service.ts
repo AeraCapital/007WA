@@ -75,8 +75,8 @@ export class WhatsappService {
 
                 await this.whatsappMessagesRepository.save(newMessage);
 
-                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data:newMessage });
-
+                this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data: newMessage });
+                console.log("OnMessage", clientAccount);
                 this.handleReplies(clientAccount, msg.body, user, msg.to);
             }
         });
@@ -114,7 +114,7 @@ export class WhatsappService {
 
 
         this.clients[ user.id ] = client;
-        console.log(this.clients);
+
     }
 
     getClient (id: string): Client {
@@ -125,8 +125,11 @@ export class WhatsappService {
         return id.split('@')[ 0 ];
     }
 
-    wfyNumbers (id: string) {
-        return id + '@c.us';
+    wfyNumbers (number: string) {
+        if (!number.endsWith('@c.us')) {
+            return number + '@c.us';
+        }
+        return number;
     }
 
     async handleReplies (client: WhatsAppAccount, body: string, user: User, to: string) {
@@ -136,30 +139,32 @@ export class WhatsappService {
             reply = "I couldn't understand your query. Our customer support representative will connect with you in a moment.";
         }
 
-        await this.sendMessage(user, client.phone, reply);
+        await this.sendMessage(user, client, reply);
     }
 
-    async sendMessage (user: User, to: string, message: string) {
+    async sendMessage (user: User, to: WhatsAppAccount, message: string) {
         const client = this.getClient(user.id);
-        const whatsappAccount = await this.getWhatsappAccountFromNumber(to, user);
+        console.log("on send message ", to);
+        if (user.activeWhatsappSession === true) {
 
-        if (client) {
-            const newMessage = await this.whatsappMessagesRepository.create();
-            newMessage.body = message;
-            newMessage.type = 'out';
-            newMessage.messageTimestamp = 12345;
-            newMessage.user = user;
-            newMessage.client = whatsappAccount;
+            if (client) {
+                const newMessage = await this.whatsappMessagesRepository.create();
+                newMessage.body = message;
+                newMessage.type = 'out';
+                newMessage.messageTimestamp = 12345;
+                newMessage.user = user;
+                newMessage.client = to;
 
-            await this.whatsappMessagesRepository.save(newMessage).catch(c => console.log(c));
+                await this.whatsappMessagesRepository.save(newMessage).catch(c => console.log(c));
 
-            this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
+                this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
 
-            return await client.sendMessage(this.wfyNumbers(to), message);
-        }
+                return await client.sendMessage(this.wfyNumbers(to.phone), message);
+            }
 
-        else {
-            throw new NotFoundException('Session not found or not connected');
+            else {
+                throw new NotFoundException('Session not found or not connected');
+            }
         }
     }
 
@@ -182,7 +187,7 @@ export class WhatsappService {
         if (!account) {
             throw new NotFoundException(`Acount with id ${ accountId } Not Found!`);
         }
-        console.log(account);
+
         return await this.whatsappMessagesRepository.find({
             where: {
 
@@ -206,15 +211,16 @@ export class WhatsappService {
     }
 
     async getWhatsappAccountFromNumber (phone: string, owner: User): Promise<WhatsAppAccount> {
-        let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: owner } });
-        console.log(account)
-        if (!account) {
-            console.log("Running this")
+        let account = await this.accountRepository.findOne({ where: { phone: this.cleanNumbers(phone), owner: { id: owner.id } } });
+        console.log('get whatsapp accoumt', account);
+        if (account === null) {
+
             // Create a new record for the sender if they don't exist
             account = new WhatsAppAccount();
             account.phone = this.cleanNumbers(phone);
             account.owner = owner;
             await this.accountRepository.save(account);
+            console.log('get whatsapp account after creating account', account);
         }
 
 

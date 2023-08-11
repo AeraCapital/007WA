@@ -84,8 +84,8 @@ export class WhatsappController {
       if (!user) {
         throw new NotFoundException(`User with ID ${ id } not found!`);
       }
-
-      const data = await this.whatsappService.sendMessage(user, sendMessageDto.id, sendMessageDto.text);
+      const clientAccount = await this.whatsappService.getWhatsappAccountFromNumber(sendMessageDto.id, user);
+      const data = await this.whatsappService.sendMessage(user, clientAccount, sendMessageDto.text);
       return { statusCode: HTTP_STATUS.OK };
 
     } catch (err) {
@@ -98,7 +98,7 @@ export class WhatsappController {
       if (err instanceof NotFoundException) {
         throw new NotFoundException({ statusCode: HTTP_STATUS.NOT_FOUND, message: err.message });
       }
-      console.log(err)
+      console.log(err);
       throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
   }
