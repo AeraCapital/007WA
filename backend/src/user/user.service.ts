@@ -84,7 +84,7 @@ export class UserService {
         }
 
 
-        const password = 'agent123';
+        const password = createAgentDto.password;
         const hashedPassword = await hash(password, 10);
         const user = await this.usersRepository.create({ ...createAgentDto, password: hashedPassword, role: USER_ROLE.AGENT });
         const data = this.usersRepository.save(user);

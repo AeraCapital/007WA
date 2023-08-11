@@ -17,6 +17,10 @@ export class CreateAgentDto {
     @IsNotEmpty()
     @IsEmail()
     email: string;
+
+    @IsNotEmpty()
+    @IsString()
+    password: string;
 }
 
 export class UserLoginDto {
