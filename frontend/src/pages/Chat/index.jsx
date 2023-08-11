@@ -1,74 +1,29 @@
 import Breadcrumbs from "Components/Common/Breadcrumb";
-import setupSocket from "helpers/socket";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "reactstrap";
-import { createSession, handleSocketMessage } from "slices/thunk";
+import { createSession } from "slices/thunk";
+import { CONNECTION_STATE } from "slices/whatsapp/reducer";
 import Chat from "./chat";
-import WhatsappButton from "./connect-whatsapp";
-import QRCard from "./qr";
+import ConnectWhatsapp from "./connect-whatsapp";
+import ScanQRCard from "./scan-qr";
 
 const ChatLayout = () => {
-  const [userId, setUserId] = useState("");
-  const [activeSession, setActiveSession] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [qr, setQR] = useState(null);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      setUserId(obj.user.id);
-      setActiveSession(obj.user.activeWhatsappSession);
-    }
-  }, []);
-
-  const { success } = useSelector((state) => ({
-    success: state.Whatsapp.success,
+  const { whatsAppState, qrData } = useSelector((state) => ({
+    whatsAppState: state.Whatsapp.whatsAppState,
+    qrData: state.Whatsapp.qrData,
   }));
 
   useEffect(() => {
-    if (activeSession || success) {
-      const socket = setupSocket(userId);
-
-      socket.on(userId, (data) => {
-        if (data.type === "qr") {
-          const qrData = data.qr;
-          setQR(qrData);
-          setLoading(false);
-        } else if (data.type === "ready") {
-          console.log("Socket Ready");
-          // dispatch(getContacts());
-          // handle socket ready
-        } else if (data.type === "logout") {
-          // handle logout
-          console.log("Whatsapp disconnected");
-          // dispatch(getContacts());
-        } else {
-          if (!activeSession) {
-            setActiveSession(true);
-            let authData = JSON.parse(localStorage.getItem("authUser"));
-            authData.user.activeWhatsappSession = true;
-            localStorage.setItem("authUser", JSON.stringify(authData));
-          }
-          if (data.type === "chat") {
-            console.log(data);
-            if (data.data) {
-              dispatch(handleSocketMessage(data.data));
-            } else {
-              console.log("New message received", data);
-            }
-          } else {
-            console.log("Received data of type:", data.type);
-          }
-        }
-      });
+    if (whatsAppState === CONNECTION_STATE.SCAN_QR) {
+      setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSession, success]);
+  }, [whatsAppState]);
 
-  const dispatch = useDispatch();
-
-  const handleConnection = () => {
+  const handleCreateSession = async () => {
     setLoading(true);
     dispatch(createSession());
   };
@@ -78,17 +33,14 @@ const ChatLayout = () => {
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="" breadcrumbItem="Messages" />
-          {activeSession ? (
-            <Chat />
-          ) : (
-            <>
-              {qr ? (
-                <QRCard qr={qr} />
-              ) : (
-                <WhatsappButton isLoading={loading} onClick={handleConnection} />
-              )}
-            </>
+          {whatsAppState === CONNECTION_STATE.CONNECTED && <Chat />}
+          {whatsAppState === CONNECTION_STATE.DISCONNECTED && (
+            <ConnectWhatsapp isLoading={loading} onClick={handleCreateSession} />
           )}
+          {whatsAppState === CONNECTION_STATE.WAITING_QR && (
+            <ConnectWhatsapp isLoading={true} onClick={handleCreateSession} />
+          )}
+          {whatsAppState === CONNECTION_STATE.SCAN_QR && <ScanQRCard qr={qrData} />}
         </Container>
       </div>
     </React.Fragment>

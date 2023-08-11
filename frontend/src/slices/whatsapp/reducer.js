@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const CONNECTION_STATE = {
+  CONNECTED: "CONNECTED",
+  DISCONNECTED: "DISCONNECTED",
+  WAITING_QR: "WAITING_QR",
+  SCAN_QR: "SCAN_QR",
+};
+
 const initialState = {
   loading: false,
   error: null,
@@ -8,6 +15,8 @@ const initialState = {
   contacts: [],
   messages: [],
   fetchedMessages: {},
+  whatsAppState: CONNECTION_STATE.DISCONNECTED,
+  qrData: null,
 };
 
 const KeywordsSlice = createSlice({
@@ -62,6 +71,20 @@ const KeywordsSlice = createSlice({
     setActiveContact(state, action) {
       state.activeContact = action.payload;
     },
+    udpateWhatsAppState(state, action) {
+      state.whatsAppState = action.payload;
+      if (action.payload === CONNECTION_STATE.DISCONNECTED) {
+        state.messages = [];
+        state.contacts = [];
+        state.fetchedMessages = {};
+        state.activeContact = null;
+        state.qrData = null;
+      }
+    },
+    qrDataReceived(state, action) {
+      state.qrData = action.payload;
+      state.whatsAppState = CONNECTION_STATE.SCAN_QR;
+    },
   },
 });
 
@@ -78,6 +101,8 @@ export const {
   addFetchedMessage,
   addNewMessage,
   addContact,
+  udpateWhatsAppState,
+  qrDataReceived,
 } = KeywordsSlice.actions;
 
 export default KeywordsSlice.reducer;

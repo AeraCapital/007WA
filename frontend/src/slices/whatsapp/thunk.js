@@ -5,21 +5,23 @@ import {
   postMessage,
 } from "../../helpers/backend_helper.js";
 import {
+  CONNECTION_STATE,
+  addContact,
+  addFetchedMessage,
   connectionError,
-  connectionSuccess,
   getContactsSuccess,
   getMessagesSuccess,
   sendMessageSuccess,
   storeFetchedMessages,
-  addFetchedMessage,
-  addContact,
+  udpateWhatsAppState,
 } from "./reducer";
 // import { messages } from "./mock-data-contacts.jsx";
 
-export const createSession = (data) => async (dispatch) => {
+export const createSession = () => async (dispatch) => {
   try {
-    await postCreateSession(data);
-    dispatch(connectionSuccess());
+    await postCreateSession();
+    console.log("Create Session Success");
+    dispatch(udpateWhatsAppState(CONNECTION_STATE.WAITING_QR));
   } catch (error) {
     dispatch(connectionError(error));
   }

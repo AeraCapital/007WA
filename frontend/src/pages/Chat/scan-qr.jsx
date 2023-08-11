@@ -2,7 +2,7 @@ import React from "react";
 import QRCode from "qrcode.react";
 import { Card, Row, Col, CardBody, CardTitle } from "reactstrap";
 
-const QRCard = ({ qr }) => {
+const ScanQRCard = ({ qr }) => {
   return (
     <Row>
       <Col md={7}>
@@ -23,4 +23,4 @@ const QRCard = ({ qr }) => {
   );
 };
 
-export default QRCard;
+export default ScanQRCard;
