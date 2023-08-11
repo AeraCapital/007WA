@@ -163,9 +163,9 @@ const SidebarContent = (props) => {
             </li>
 
             <li>
-              <Link to="/message">
+              <Link to="/chat">
                 <i className="bx bx-chat"></i>
-                <span>{props.t("Messages")}</span>
+                <span>{props.t("Chat")}</span>
               </Link>
             </li>
 

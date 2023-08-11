@@ -32,7 +32,7 @@ const ChatLayout = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="" breadcrumbItem="Messages" />
+          <Breadcrumbs title="" breadcrumbItem="Chat" />
           {whatsAppState === CONNECTION_STATE.CONNECTED && <Chat />}
           {whatsAppState === CONNECTION_STATE.DISCONNECTED && (
             <ConnectWhatsapp isLoading={loading} onClick={handleCreateSession} />

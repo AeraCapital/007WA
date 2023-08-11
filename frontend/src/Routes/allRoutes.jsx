@@ -41,7 +41,7 @@ const authProtectedRoutes = [
   { path: "/keywords", component: <Keywords /> },
   { path: "/agents", component: <Agents /> },
   { path: "/whatsapp", component: <Whatsapp /> },
-  { path: "/message", component: <Chat /> },
+  { path: "/chat", component: <Chat /> },
   // { path: "/playground", component: <EcommerceOrder /> },
   { path: "/", exact: true, component: <Navigate to="/dashboard" /> },
 ];
