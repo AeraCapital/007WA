@@ -39,3 +39,4 @@ export const updateAgent = (data, id) => api.put(url.UPDATE_AGENT + id, data);
 export const postCreateSession = (data) => api.create(url.CREATE_SESSION, data);
 export const fetchContacts = () => api.get(url.GET_CONTACTS, null);
 export const fetchMessage = (id) => api.get(url.GET_MESSAGE + id, null);
+export const postMessage = (data) => api.create(url.POST_MESSAGE, data);

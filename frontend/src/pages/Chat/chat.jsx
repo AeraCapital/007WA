@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Row } from "reactstrap";
@@ -7,12 +7,12 @@ import ChatInterface from "./chat-interface.jsx";
 import ContactsList from "./contact-list.jsx";
 
 const Chat = () => {
-  const [activeContact, setActiveContact] = useState(null);
   const dispatch = useDispatch();
 
-  const { contacts, messages } = useSelector((state) => ({
+  const { contacts, messages, activeContact } = useSelector((state) => ({
     contacts: state.Whatsapp.contacts,
     messages: state.Whatsapp.messages,
+    activeContact: state.Whatsapp.activeContact,
   }));
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (activeContact) {
-      dispatch(getMessage(activeContact.id));
+      dispatch(getMessage(activeContact?.id));
     }
   }, [activeContact, dispatch]);
 
@@ -29,12 +29,8 @@ const Chat = () => {
     <Row>
       <Col lg={12}>
         <div className="d-lg-flex">
-          <ContactsList
-            contacts={contacts}
-            activeContact={activeContact}
-            setActiveContact={setActiveContact}
-          />
-          <ChatInterface msgData={messages} activeContact={activeContact} />
+          <ContactsList contacts={contacts} />
+          <ChatInterface messages={messages} activeContact={activeContact} />
         </div>
       </Col>
     </Row>

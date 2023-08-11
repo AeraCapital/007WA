@@ -24,3 +24,4 @@ export const PUT_UPDATE_PROFILE = "/user/";
 export const CREATE_SESSION = "/whatsapp/create-session/";
 export const GET_CONTACTS = "/whatsapp/contacts/";
 export const GET_MESSAGE = "/whatsapp/messages/";
+export const POST_MESSAGE = "/whatsapp/send_message/";

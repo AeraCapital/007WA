@@ -1,4 +1,3 @@
-import React from "react";
 import { formatTimestamp } from "helpers/utils";
 
 const MessageItem = ({ message }) => {
@@ -7,7 +6,7 @@ const MessageItem = ({ message }) => {
     message.type === "in" ? "ctext-wrap" : "ctext-wrap bg-primary text-light";
 
   return (
-    <li key={"test_k" + message.id} className={messageClass}>
+    <li className={messageClass}>
       <div className="conversation-list m-1">
         <div className={messageWrapClass}>
           <p>{message.body}</p>

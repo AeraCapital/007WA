@@ -3,7 +3,7 @@ import setupSocket from "helpers/socket";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "reactstrap";
-import { createSession } from "slices/thunk";
+import { createSession, handleSocketMessage } from "slices/thunk";
 import Chat from "./chat";
 import WhatsappButton from "./connect-whatsapp";
 import QRCard from "./qr";
@@ -27,7 +27,7 @@ const ChatLayout = () => {
   }));
 
   useEffect(() => {
-    if (success) {
+    if (activeSession || success) {
       const socket = setupSocket(userId);
 
       socket.on(userId, (data) => {
@@ -35,6 +35,14 @@ const ChatLayout = () => {
           const qrData = data.qr;
           setQR(qrData);
           setLoading(false);
+        } else if (data.type === "ready") {
+          console.log("Socket Ready");
+          // dispatch(getContacts());
+          // handle socket ready
+        } else if (data.type === "logout") {
+          // handle logout
+          console.log("Whatsapp disconnected");
+          // dispatch(getContacts());
         } else {
           if (!activeSession) {
             setActiveSession(true);
@@ -42,15 +50,21 @@ const ChatLayout = () => {
             authData.user.activeWhatsappSession = true;
             localStorage.setItem("authUser", JSON.stringify(authData));
           }
-          if (data.type === "") {
-            
+          if (data.type === "chat") {
+            console.log(data);
+            if (data.data) {
+              dispatch(handleSocketMessage(data.data));
+            } else {
+              console.log("New message received", data);
+            }
+          } else {
+            console.log("Received data of type:", data.type);
           }
-          console.log("Received data of type:", data.type);
         }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
+  }, [activeSession, success]);
 
   const dispatch = useDispatch();
 

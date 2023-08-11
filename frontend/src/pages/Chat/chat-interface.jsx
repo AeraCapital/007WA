@@ -1,14 +1,12 @@
 import EmptyMessage from "assets/images/empty-message.png";
 import { formatMobileNumber } from "helpers/utils";
-import { useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import { Button, Card, Col, Input, Row } from "reactstrap";
+import { Card } from "reactstrap";
+import ChatInput from "./chat-input";
 import MessageItem from "./message-item";
 
-const ChatInterface = ({ msgData, activeContact }) => {
-  const [curMessage, setCurMessage] = useState("");
-
+const ChatInterface = ({ messages, activeContact }) => {
   return activeContact ? (
     <div className="w-100">
       <Card>
@@ -20,38 +18,13 @@ const ChatInterface = ({ msgData, activeContact }) => {
           <div className="chat-conversation p-3 pt-0">
             <ul className="list-unstyled">
               <PerfectScrollbar style={{ height: "400px" }}>
-                {msgData.map((message) => (
-                  <MessageItem message={message} />
+                {messages.map((message) => (
+                  <MessageItem message={message} key={message.id} />
                 ))}
               </PerfectScrollbar>
             </ul>
           </div>
-          {/* Chat input section */}
-          <div className="p-3 chat-input-section">
-            <Row>
-              <Col>
-                <div className="position-relative">
-                  <Input
-                    type="text"
-                    value={curMessage}
-                    onChange={(e) => setCurMessage(e.target.value)}
-                    className="chat-input"
-                    placeholder="Enter Message..."
-                  />
-                </div>
-              </Col>
-              <Col className="col-auto">
-                <Button
-                  type="button"
-                  color="primary"
-                  onClick={() => console.log("Clicked")}
-                  className="btn btn-primary btn-rounded chat-send w-md ">
-                  <span className="d-none d-sm-inline-block me-2">Send</span>
-                  <i className="mdi mdi-send" />
-                </Button>
-              </Col>
-            </Row>
-          </div>
+          <ChatInput receiverPhone={activeContact.phone} />
         </div>
       </Card>
     </div>

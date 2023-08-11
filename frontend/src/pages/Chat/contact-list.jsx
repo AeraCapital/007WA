@@ -1,10 +1,10 @@
 import { useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import { Input, Card } from "reactstrap";
+import { Card, Input } from "reactstrap";
 import ContactItem from "./contact-item.jsx"; // Import the sub-component
 
-const ContactsList = ({ contacts, activeContact, setActiveContact }) => {
+const ContactsList = ({ contacts }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (event) => {
@@ -27,12 +27,7 @@ const ContactsList = ({ contacts, activeContact, setActiveContact }) => {
           {filteredContacts.length ? (
             <PerfectScrollbar style={{ height: "450px" }}>
               {filteredContacts.map((contact) => (
-                <ContactItem
-                  key={contact.id}
-                  contact={contact}
-                  activeContact={activeContact}
-                  setActiveContact={setActiveContact}
-                />
+                <ContactItem key={contact.id} contact={contact} />
               ))}
             </PerfectScrollbar>
           ) : (

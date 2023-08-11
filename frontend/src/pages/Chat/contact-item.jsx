@@ -1,10 +1,22 @@
-import { Link } from "react-router-dom";
 import { formatMobileNumber } from "helpers/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { setActiveContact } from "slices/whatsapp/reducer";
 
-const ContactItem = ({ contact, activeContact, setActiveContact }) => {
+const ContactItem = ({ contact }) => {
+  const dispatch = useDispatch();
+
+  const handleContactItemClicked = (contact) => {
+    dispatch(setActiveContact(contact));
+  };
+
+  const { activeContact } = useSelector((state) => ({
+    activeContact: state.Whatsapp.activeContact,
+  }));
+
   return (
     <li className={activeContact?.phone === contact.phone ? "active" : ""}>
-      <Link to="#" onClick={() => setActiveContact(contact)}>
+      <Link to="#" onClick={() => handleContactItemClicked(contact)}>
         <div className="d-flex align-items-center">
           <div className="avatar-xs align-self-center me-3">
             <span className="avatar-title rounded-circle bg-primary bg-soft text-primary">
