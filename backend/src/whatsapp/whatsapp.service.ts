@@ -125,8 +125,11 @@ export class WhatsappService {
         return id.split('@')[ 0 ];
     }
 
-    wfyNumbers (id: string) {
-        return id + '@c.us';
+    wfyNumbers (number: string) {
+        if (!number.endsWith('@c.us')) {
+            return number + '@c.us';
+        }
+        return number;
     }
 
     async handleReplies (client: WhatsAppAccount, body: string, user: User, to: string) {
@@ -156,7 +159,7 @@ export class WhatsappService {
 
                 this.whatsappGateway.sendDirectMessage(user.id, { type: 'chat', data: newMessage });
 
-                return await client.sendMessage(to.phone, message);
+                return await client.sendMessage(this.wfyNumbers(to.phone), message);
             }
 
             else {
