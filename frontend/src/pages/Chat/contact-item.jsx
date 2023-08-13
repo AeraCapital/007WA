@@ -16,7 +16,7 @@ const ContactItem = ({ contact }) => {
 
   return (
     <li className={activeContact?.phone === contact.phone ? "active" : ""}>
-      <Link to="#" onClick={() => handleContactItemClicked(contact)}>
+      <Link to="#" onClick={() => handleContactItemClicked(contact)} className="position-relative">
         <div className="d-flex align-items-center">
           <div className="avatar-xs align-self-center me-3">
             <span className="avatar-title rounded-circle bg-primary bg-soft text-primary">
@@ -25,6 +25,11 @@ const ContactItem = ({ contact }) => {
           </div>
           <div>{formatMobileNumber(contact.phone)}</div>
         </div>
+        {!(contact.newMessageCount === 0) && (
+          <span className="badge rounded-pill bg-success position-absolute top-0 end-0 m-2">
+            {contact.newMessageCount}
+          </span>
+        )}
       </Link>
     </li>
   );

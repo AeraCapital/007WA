@@ -8,6 +8,7 @@ import {
   CONNECTION_STATE,
   addContact,
   addFetchedMessage,
+  addNewMessageCount,
   connectionError,
   getContactsSuccess,
   getMessagesSuccess,
@@ -31,7 +32,11 @@ export const getContacts = () => async (dispatch) => {
   // dispatch(getContactsSuccess(contacts));
   try {
     let response = await fetchContacts();
-    dispatch(getContactsSuccess(response.data));
+    const responseWithMessageCount = response.data.map((contact) => ({
+      ...contact,
+      newMessageCount: 0,
+    }));
+    dispatch(getContactsSuccess(responseWithMessageCount));
   } catch (error) {
     dispatch(connectionError(error));
   }
@@ -72,13 +77,19 @@ export const handleSocketMessage = (data) => async (dispatch, getState) => {
   const fetchedMessages = state.Whatsapp.fetchedMessages;
   const contacts = state.Whatsapp.contacts;
 
+  //if id is not there in contacts list
   const idSet = new Set(contacts.map((item) => item.id));
   if (!idSet.has(data.client.id)) {
-    console.log("new contacts", data.client.id);
-    console.log(contacts);
-    dispatch(addContact({ id: data.client.id, phone: data.client.phone, name: data.client.name }));
+    dispatch(
+      addContact({
+        id: data.client.id,
+        phone: data.client.phone,
+        name: data.client.name,
+        newMessageCount: 1, //got a new message
+      })
+    );
   } else {
-    console.log("Existing contact");
+    dispatch(addNewMessageCount(data.client));
   }
 
   if (fetchedMessages[data.client.id]) {

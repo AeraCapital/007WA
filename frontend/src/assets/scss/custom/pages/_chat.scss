@@ -110,6 +110,7 @@
     margin-bottom: 24px;
     display: inline-block;
     position: relative;
+    max-width: 70%;
 
     .ctext-wrap {
       padding: 12px 24px;
@@ -151,7 +152,7 @@
       float: right;
       .ctext-wrap {
         background-color: var(--#{$prefix}light);
-        text-align: right;
+        text-align: left;
         border-radius: 8px 8px 0px 8px;
       }
       .dropdown {

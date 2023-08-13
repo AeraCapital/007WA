@@ -70,6 +70,10 @@ const KeywordsSlice = createSlice({
     },
     setActiveContact(state, action) {
       state.activeContact = action.payload;
+      const contactIndex = state.contacts.findIndex((contact) => contact.id === action.payload.id);
+      if (state.activeContact?.id === action.payload.id) {
+        state.contacts[contactIndex].newMessageCount = 0;
+      }
     },
     udpateWhatsAppState(state, action) {
       state.whatsAppState = action.payload;
@@ -84,6 +88,12 @@ const KeywordsSlice = createSlice({
     qrDataReceived(state, action) {
       state.qrData = action.payload;
       state.whatsAppState = CONNECTION_STATE.SCAN_QR;
+    },
+    addNewMessageCount(state, action) {
+      const contactIndex = state.contacts.findIndex((contact) => contact.id === action.payload.id);
+      if (state.activeContact?.id !== action.payload.id) {
+        state.contacts[contactIndex].newMessageCount += 1;
+      }
     },
   },
 });
@@ -103,6 +113,7 @@ export const {
   addContact,
   udpateWhatsAppState,
   qrDataReceived,
+  addNewMessageCount,
 } = KeywordsSlice.actions;
 
 export default KeywordsSlice.reducer;
