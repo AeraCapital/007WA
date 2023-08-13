@@ -56,7 +56,7 @@ export class KeywordService {
         }
     }
 
-    async delete (id: number): Promise<void> {
+    async delete (id: string): Promise<void> {
         const result = await this.keywordRepository.delete(id);
         if (result.affected === 0) {
             throw new NotFoundException(`Keyword with ID ${ id } not found.`);

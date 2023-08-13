@@ -12,6 +12,7 @@ import {
     ConflictException,
     HttpException,
     NotFoundException,
+    Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/user.dto';
@@ -150,5 +151,18 @@ export class UserController {
             throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error', error: err }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @Delete('agent/:id')
+    async deleteKeyword (@Param('id') id: string) {
+        try {
+            await this.userService.deleteAgent(id);
+            return { statusCode: HTTP_STATUS.OK, message: "Successfully deleted" };
+        } catch (err) {
+            if (err instanceof NotFoundException) {
+                throw new NotFoundException({ statusCode: HTTP_STATUS.NOT_FOUND, message: err.message });
+            }
+            throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error', error: err.message }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+        }
     }
 }

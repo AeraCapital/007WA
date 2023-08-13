@@ -111,4 +111,12 @@ export class UserService {
     async usersWithActiveSesssions () {
         return this.usersRepository.findBy({ activeWhatsappSession: true });
     }
+
+    async deleteAgent (id: string): Promise<void> {
+        const result = await this.usersRepository.delete(id);
+        
+        if (result.affected === 0) {
+            throw new NotFoundException(`Agent with ID ${ id } not found.`);
+        }
+    }
 }

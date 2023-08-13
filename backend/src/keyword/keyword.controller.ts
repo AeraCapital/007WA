@@ -65,7 +65,7 @@ export class KeywordController {
 
 
     @Delete(':id')
-    async deleteKeyword (@Param('id') id: number) {
+    async deleteKeyword (@Param('id') id: string) {
         try {
             await this.keywordReplyService.delete(id);
             return { statusCode: HTTP_STATUS.OK, message: "Successfully deleted" };

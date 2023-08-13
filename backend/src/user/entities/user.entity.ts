@@ -1,4 +1,5 @@
 import { WhatsAppAccount } from 'src/whatsapp/entities/whatsapp-account.entity';
+import { WhatsappMessages } from 'src/whatsapp/entities/whatsapp-messages.entity';
 import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, OneToMany } from 'typeorm';
 
 export enum USER_ROLE {
@@ -44,5 +45,8 @@ export class User {
     activeWhatsappSession: boolean;
 
     @OneToMany(() => WhatsAppAccount, (account) => account.owner)
-    contacts: WhatsAppAccount;
+    contacts: WhatsAppAccount[];
+
+    @OneToMany(() => WhatsappMessages, (message) => message.user)
+    messages: WhatsappMessages[];
 }

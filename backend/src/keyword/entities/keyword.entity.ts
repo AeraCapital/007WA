@@ -9,5 +9,5 @@ export class Keyword {
     keyword: string;
 
     @Column({ type: 'text' })
-    reply: string;
+    reply: string;    
 }
