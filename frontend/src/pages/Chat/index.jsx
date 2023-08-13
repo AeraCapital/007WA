@@ -9,6 +9,8 @@ import ConnectWhatsapp from "./connect-whatsapp";
 import ScanQRCard from "./scan-qr";
 
 const ChatLayout = () => {
+  document.title = "Chat | ";
+
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 

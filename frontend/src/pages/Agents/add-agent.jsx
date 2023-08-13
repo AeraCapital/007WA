@@ -18,9 +18,6 @@ import * as Yup from "yup";
 import { addAgent } from "../../slices/agents/thunk";
 
 const AddAgentModal = ({ isOpen, closeModal }) => {
-  //meta title
-  document.title = "Add Agent | ";
-
   const dispatch = useDispatch();
 
   const { error, success, loading } = useSelector((state) => ({

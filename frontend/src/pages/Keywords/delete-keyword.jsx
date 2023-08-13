@@ -4,9 +4,6 @@ import { Alert, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reac
 import { deleteKeyword } from "slices/thunk";
 
 const DeleteKeywordModal = ({ isOpen, closeModal, data }) => {
-  //meta title
-  document.title = "Add Keyword | ";
-
   const dispatch = useDispatch();
 
   const { error, success, loading } = useSelector((state) => ({
