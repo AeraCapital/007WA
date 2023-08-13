@@ -22,7 +22,7 @@ export class WhatsappMessages {
     @Column()
     messageTimestamp: number;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, user => user.messages, { cascade: [ 'remove' ] })
     @JoinColumn()
     user: User;
 }
