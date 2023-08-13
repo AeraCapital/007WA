@@ -1,5 +1,6 @@
 import EmptyMessage from "assets/images/empty-message.png";
 import { formatMobileNumber } from "helpers/utils";
+import { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Card } from "reactstrap";
@@ -7,6 +8,17 @@ import ChatInput from "./chat-input";
 import MessageItem from "./message-item";
 
 const ChatInterface = ({ messages, activeContact }) => {
+  const [messageBox, setMessageBox] = useState(null);
+
+  useEffect(() => {
+    const scrollToBottom = () => {
+      if (messageBox) {
+        messageBox.scrollTop = messageBox.scrollHeight + 1000;
+      }
+    };
+    scrollToBottom();
+  }, [messageBox, messages]);
+
   return activeContact ? (
     <div className="w-100">
       <Card>
@@ -17,7 +29,9 @@ const ChatInterface = ({ messages, activeContact }) => {
           {/* Chat conversation */}
           <div className="chat-conversation p-3 pt-0">
             <ul className="list-unstyled">
-              <PerfectScrollbar style={{ height: "400px" }}>
+              <PerfectScrollbar
+                style={{ height: "400px" }}
+                containerRef={(ref) => setMessageBox(ref)}>
                 {messages.map((message) => (
                   <MessageItem message={message} key={message.id} />
                 ))}
