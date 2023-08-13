@@ -1,7 +1,14 @@
-import { fetchAgents, postAddAgent, updateAgent } from "../../helpers/backend_helper.js";
+import {
+  fetchAgents,
+  postAddAgent,
+  removeAgent,
+  updateAgent,
+} from "../../helpers/backend_helper.js";
 import {
   addAgentFailed,
   addAgentSuccessful,
+  apiError,
+  deleteAgentSuccess,
   fetchAgentsFailed,
   fetchAgentsSuccessful,
   startLoading,
@@ -36,5 +43,16 @@ export const editAgent = (data, id) => async (dispatch) => {
     dispatch(updateAgentSuccess(response.data));
   } catch (error) {
     dispatch(updateAgentFailed(error));
+  }
+};
+
+export const deleteAgent = (id) => async (dispatch) => {
+  try {
+    dispatch(startLoading());
+    const response = await removeAgent(id);
+    console.log(response);
+    dispatch(deleteAgentSuccess(id));
+  } catch (error) {
+    dispatch(apiError(error));
   }
 };

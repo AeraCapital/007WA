@@ -35,6 +35,7 @@ export const removeKeyword = (id) => api.delete(url.DELETE_KEYWORD + id);
 export const fetchAgents = () => api.get(url.GET_AGENTS, null);
 export const postAddAgent = (data) => api.create(url.ADD_AGENT, data);
 export const updateAgent = (data, id) => api.put(url.UPDATE_AGENT + id, data);
+export const removeAgent = (id) => api.delete(url.DELETE_AGENT + id);
 
 //Chats
 export const postCreateSession = () => api.create(url.CREATE_SESSION);

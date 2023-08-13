@@ -15,6 +15,7 @@ export const DELETE_KEYWORD = "/keyword/";
 export const GET_AGENTS = "/user/agents";
 export const ADD_AGENT = "/user/agent";
 export const UPDATE_AGENT = "/user/agent/";
+export const DELETE_AGENT = "/user/agent/";
 
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile";

@@ -53,7 +53,26 @@ const AgentsSlice = createSlice({
       }
     },
 
+    deleteAgentSuccess(state, action) {
+      state.success = true;
+      state.loading = false;
+      state.error = null;
+
+      // Find the index of the deleted keyword in the data array
+      const deletedKeywordIndex = state.data.findIndex((agent) => agent.id === action.payload);
+
+      if (deletedKeywordIndex !== -1) {
+        // If the keyword is found, remove it from the data array
+        state.data.splice(deletedKeywordIndex, 1);
+      }
+    },
+
     updateAgentFailed(state, action) {
+      state.error = action.payload;
+      state.loading = false;
+    },
+
+    apiError(state, action) {
       state.error = action.payload;
       state.loading = false;
     },
@@ -69,6 +88,8 @@ export const {
   fetchAgentsFailed,
   updateAgentSuccess,
   updateAgentFailed,
+  deleteAgentSuccess,
+  apiError,
 } = AgentsSlice.actions;
 
 export default AgentsSlice.reducer;
