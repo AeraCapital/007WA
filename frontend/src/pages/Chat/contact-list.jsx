@@ -25,7 +25,7 @@ const ContactsList = ({ contacts }) => {
         <h5 className="font-size-14 mb-3">Contacts</h5>
         <ul className="list-unstyled chat-list">
           {filteredContacts.length ? (
-            <PerfectScrollbar style={{ height: "450px" }}>
+            <PerfectScrollbar style={{ height: "53vh" }}>
               {filteredContacts.map((contact) => (
                 <ContactItem key={contact.id} contact={contact} />
               ))}

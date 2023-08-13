@@ -30,7 +30,7 @@ const ChatInterface = ({ messages, activeContact }) => {
           <div className="chat-conversation p-3 pt-0">
             <ul className="list-unstyled">
               <PerfectScrollbar
-                style={{ height: "400px" }}
+                style={{ height: "53vh" }}
                 containerRef={(ref) => setMessageBox(ref)}>
                 {messages.map((message) => (
                   <MessageItem message={message} key={message.id} />
