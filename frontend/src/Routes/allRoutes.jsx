@@ -38,12 +38,15 @@ const authProtectedRoutes = [
   { path: "/pages-starter", component: <PagesStarter /> },
   { path: "/my-profile", component: <UserProfile /> },
   { path: "/change-password", component: <ChangePassword /> },
-  { path: "/keywords", component: <Keywords /> },
-  { path: "/agents", component: <Agents /> },
   { path: "/whatsapp", component: <Whatsapp /> },
   { path: "/chat", component: <Chat /> },
   // { path: "/playground", component: <EcommerceOrder /> },
-  { path: "/", exact: true, component: <Navigate to="/dashboard" /> },
+  { path: "/", exact: true, component: <Navigate to="/chat" /> },
+];
+
+const adminOnlyRoutes = [
+  { path: "/keywords", component: <Keywords /> },
+  { path: "/agents", component: <Agents /> },
 ];
 
 const publicRoutes = [
@@ -60,4 +63,4 @@ const publicRoutes = [
   { path: "/pages-404", component: <Pages404 /> },
   { path: "/pages-500", component: <Pages500 /> },
 ];
-export { authProtectedRoutes, publicRoutes };
+export { adminOnlyRoutes, authProtectedRoutes, publicRoutes };

@@ -9,7 +9,7 @@ export const loginUser = (credentials, history) => async (dispatch) => {
     if (response.data) {
       localStorage.setItem("authUser", JSON.stringify(response.data));
       dispatch(loginSuccess(response.data));
-      history("/dashboard");
+      history("/");
     } else {
       dispatch(loginError("Something went wrong. Try again later"));
     }

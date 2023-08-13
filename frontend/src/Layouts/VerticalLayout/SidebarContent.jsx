@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+
 //Import Scrollbar
 import SimpleBar from "simplebar-react";
 
@@ -134,33 +136,30 @@ const SidebarContent = (props) => {
       }
     }
   }
+  const [isAdmin, setIsAdmin] = useState(false);
 
+  const { user } = useSelector((state) => ({
+    user: state.Login.user,
+  }));
+
+  useEffect(() => {
+    if (localStorage.getItem("authUser")) {
+      const obj = JSON.parse(localStorage.getItem("authUser") || "");
+      setIsAdmin(obj.user.role === "admin");
+    }
+  }, [user]);
   return (
     <React.Fragment>
       <SimpleBar className="h-100" ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
             {/* <li className="menu-title">{props.t("Menu")} </li> */}
-            <li>
+            {/* <li>
               <Link to="/#">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Dashboard")}</span>
               </Link>
-            </li>
-
-            <li>
-              <Link to="/keywords">
-                <i className="bx bx-file"></i>
-                <span>{props.t("Keywords")}</span>
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/agents">
-                <i className="bx bx-street-view"></i>
-                <span>{props.t("Agents")}</span>
-              </Link>
-            </li>
+            </li> */}
 
             <li>
               <Link to="/chat">
@@ -169,6 +168,23 @@ const SidebarContent = (props) => {
               </Link>
             </li>
 
+            {isAdmin && (
+              <li>
+                <Link to="/keywords">
+                  <i className="bx bx-file"></i>
+                  <span>{props.t("Keywords")}</span>
+                </Link>
+              </li>
+            )}
+
+            {isAdmin && (
+              <li>
+                <Link to="/agents">
+                  <i className="bx bx-street-view"></i>
+                  <span>{props.t("Agents")}</span>
+                </Link>
+              </li>
+            )}
             {/* <li className="menu-title">{props.t("Apps")}</li> */}
           </ul>
         </div>
