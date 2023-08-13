@@ -29,6 +29,7 @@ export const updateProfile = (data) => api.put(url.PUT_UPDATE_PROFILE, data);
 export const fetchKeywords = () => api.get(url.GET_KEYWORDS, null);
 export const postAddKeyword = (data) => api.create(url.ADD_KEYWORD, data);
 export const updateKeyword = (data, id) => api.put(url.UPDATE_KEYWORD + id, data);
+export const removeKeyword = (id) => api.delete(url.DELETE_KEYWORD + id);
 
 // Agents
 export const fetchAgents = () => api.get(url.GET_AGENTS, null);

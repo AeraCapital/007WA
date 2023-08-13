@@ -1,12 +1,16 @@
-import { fetchKeywords, postAddKeyword, updateKeyword } from "../../helpers/backend_helper.js";
 import {
-  addKeywordFailed,
+  fetchKeywords,
+  postAddKeyword,
+  removeKeyword,
+  updateKeyword,
+} from "../../helpers/backend_helper.js";
+import {
   addKeywordSuccessful,
-  fetchKeywordsFailed,
+  deleteKeywordSuccess,
   fetchKeywordsSuccessful,
   startLoading,
-  updateKeywordFailed,
   updateKeywordSuccess,
+  apiError,
 } from "./reducer.jsx";
 
 export const addKeyword = (data) => async (dispatch) => {
@@ -17,7 +21,7 @@ export const addKeyword = (data) => async (dispatch) => {
     console.log(response);
     dispatch(addKeywordSuccessful(response.data));
   } catch (error) {
-    dispatch(addKeywordFailed(error));
+    dispatch(apiError(error));
   }
 };
 
@@ -27,7 +31,7 @@ export const fetchKeywordsList = () => async (dispatch) => {
     const response = await fetchKeywords();
     dispatch(fetchKeywordsSuccessful(response.data));
   } catch (error) {
-    dispatch(fetchKeywordsFailed(error));
+    dispatch(apiError(error));
   }
 };
 
@@ -37,6 +41,17 @@ export const editKeyword = (data, id) => async (dispatch) => {
     const response = await updateKeyword(data, id);
     dispatch(updateKeywordSuccess(response.data));
   } catch (error) {
-    dispatch(updateKeywordFailed(error));
+    dispatch(apiError(error));
+  }
+};
+
+export const deleteKeyword = (id) => async (dispatch) => {
+  try {
+    dispatch(startLoading());
+    const response = await removeKeyword(id);
+    console.log(response);
+    dispatch(deleteKeywordSuccess(id));
+  } catch (error) {
+    dispatch(apiError(error));
   }
 };

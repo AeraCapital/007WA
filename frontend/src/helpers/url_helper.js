@@ -9,6 +9,7 @@ export const POST_JWT_PASSWORD_CHANGE = "/auth/change/password/";
 export const GET_KEYWORDS = "/keyword";
 export const ADD_KEYWORD = "/keyword/set";
 export const UPDATE_KEYWORD = "/keyword/";
+export const DELETE_KEYWORD = "/keyword/";
 
 // AGENTS
 export const GET_AGENTS = "/user/agents";

@@ -21,25 +21,16 @@ const KeywordsSlice = createSlice({
       state.success = null;
     },
     addKeywordSuccessful(state, action) {
-      console.log("Payload:", action.payload);
       state.data.push(action.payload);
       state.loading = false;
       state.success = true;
       state.error = null;
     },
-    addKeywordFailed(state, action) {
-      state.loading = false;
-      state.success = false;
-      state.error = action.payload;
-    },
     fetchKeywordsSuccessful(state, action) {
       state.loading = false;
       state.data = action.payload;
     },
-    fetchKeywordsFailed(state, action) {
-      state.loading = false;
-      state.error = action.payload;
-    },
+
     updateKeywordSuccess(state, action) {
       state.success = true;
       state.loading = false;
@@ -55,10 +46,23 @@ const KeywordsSlice = createSlice({
         state.data[updatedKeywordIndex] = action.payload;
       }
     },
-
-    updateKeywordFailed(state, action) {
-      state.error = action.payload;
+    apiError(state, action) {
+      state.success = false;
       state.loading = false;
+      state.error = action.payload;
+    },
+    deleteKeywordSuccess(state, action) {
+      state.success = true;
+      state.loading = false;
+      state.error = null;
+
+      // Find the index of the deleted keyword in the data array
+      const deletedKeywordIndex = state.data.findIndex((keyword) => keyword.id === action.payload);
+
+      if (deletedKeywordIndex !== -1) {
+        // If the keyword is found, remove it from the data array
+        state.data.splice(deletedKeywordIndex, 1);
+      }
     },
   },
 });
@@ -67,11 +71,10 @@ export const {
   resetFlags,
   startLoading,
   addKeywordSuccessful,
-  addKeywordFailed,
   fetchKeywordsSuccessful,
-  fetchKeywordsFailed,
   updateKeywordSuccess,
-  updateKeywordFailed,
+  deleteKeywordSuccess,
+  apiError,
 } = KeywordsSlice.actions;
 
 export default KeywordsSlice.reducer;

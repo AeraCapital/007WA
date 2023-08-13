@@ -101,8 +101,9 @@ class APIClient {
     return axios.put(url, data);
   };
 
-  delete = (url, config) => {
-    return axios.delete(url, { ...config });
+  delete = (url) => {
+    setAuthorization();
+    return axios.delete(url);
   };
 }
 

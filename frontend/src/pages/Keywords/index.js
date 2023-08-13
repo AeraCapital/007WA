@@ -5,14 +5,23 @@ import { fetchKeywordsList } from "slices/thunk";
 import Breadcrumbs from "../../Components/Common/Breadcrumb";
 import TableContainer from "../../Components/Common/TableContainer";
 import AddKeywordModal from "./add-keyword";
+import DeleteKeywordModal from "./delete-keyword";
 import EditKeywordModal from "./edit-keyword";
 
 const Keywords = () => {
   const [displayAddModal, setDisplayAddModal] = useState(false);
   const [displayEditModal, setDisplayEditModal] = useState(false);
+  const [displayDeleteModal, setDisplayDeleteModal] = useState(false);
 
   const [editingData, setEditingData] = useState({});
+  const [deletingData, setDeletingData] = useState({});
   const toggleAddModal = () => setDisplayAddModal(true);
+
+  const handleDelete = (data) => {
+    setDeletingData(data);
+    setDisplayDeleteModal(true);
+  };
+
   const handleEdit = (data) => {
     setEditingData(data);
     setDisplayEditModal(true);
@@ -20,6 +29,7 @@ const Keywords = () => {
 
   const closeAddModal = () => setDisplayAddModal(false);
   const closeEditModal = () => setDisplayEditModal(false);
+  const closeDeleteModal = () => setDisplayDeleteModal(false);
 
   const columns = useMemo(
     () => [
@@ -38,11 +48,22 @@ const Keywords = () => {
       {
         Header: "Action",
         accessor: (row) => (
-          <td>
-            <button type="button" className="btn btn-light btn-sm" onClick={() => handleEdit(row)}>
+          <>
+            <button
+              type="button"
+              className="btn btn-light btn-sm mx-1" // Apply horizontal margin when stacked
+              onClick={() => handleEdit(row)}>
+              <i className="bx bx-edit-alt p-1"></i>
               Edit
             </button>
-          </td>
+
+            <button
+              type="button"
+              className="btn btn-light btn-sm mx-1" // Apply horizontal margin when stacked
+              onClick={() => handleDelete(row)}>
+              <i className="bx bx-trash p-1"></i> Delete
+            </button>
+          </>
         ),
         Filter: false,
         disableSortBy: true,
@@ -57,7 +78,6 @@ const Keywords = () => {
     error: state.Keywords.error,
     loading: state.Keywords.loading,
   }));
-  console.log(data);
 
   useEffect(() => {
     dispatch(fetchKeywordsList());
@@ -74,6 +94,11 @@ const Keywords = () => {
     <React.Fragment>
       <EditKeywordModal isOpen={displayEditModal} closeModal={closeEditModal} data={editingData} />
       <AddKeywordModal isOpen={displayAddModal} closeModal={closeAddModal} />
+      <DeleteKeywordModal
+        isOpen={displayDeleteModal}
+        closeModal={closeDeleteModal}
+        data={deletingData}
+      />
       <div className="page-content">
         <div className="container-fluid">
           <Breadcrumbs title="" breadcrumbItem="Keywords" />
