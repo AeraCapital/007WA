@@ -3,6 +3,7 @@ import { KeywordService } from './keyword.service';
 import { SetKeywordDto } from './dto/setKeyword.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { HTTP_STATUS } from 'src/common/constants/status';
+import { UpdateKeywordDto } from './dto/updateKeyword';
 
 
 @Controller('keyword')
@@ -14,7 +15,7 @@ export class KeywordController {
     async setKeyword (@Body() setKeywordDto: SetKeywordDto) {
         try {
             const data = await this.keywordReplyService.setKeyword(setKeywordDto);
-            return { statusCode: HTTP_STATUS.CREATED, data, message:"Keyword Created!" };
+            return { statusCode: HTTP_STATUS.CREATED, data, message: "Keyword Created!" };
 
         } catch (err) {
 
@@ -33,10 +34,10 @@ export class KeywordController {
 
     @Put(':id')
     @UsePipes(new ValidationPipe({ transform: true }))
-    async updateKeyword (@Param('id') id: string, @Body() setKeywordDto: SetKeywordDto) {
+    async updateKeyword (@Param('id') id: string, @Body() updateKeywordDto: UpdateKeywordDto) {
         try {
-            const data = await this.keywordReplyService.updateKeyword(id, setKeywordDto);
-            return { statusCode: HTTP_STATUS.OK, data, message:"Keyword Updated!" };
+            const data = await this.keywordReplyService.updateKeyword(id, updateKeywordDto);
+            return { statusCode: HTTP_STATUS.OK, data, message: "Keyword Updated!" };
         } catch (err) {
 
             if (err instanceof ConflictException) {
