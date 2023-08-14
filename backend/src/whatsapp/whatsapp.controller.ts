@@ -123,4 +123,27 @@ export class WhatsappController {
 
     }
   }
+
+  @Get('/agent/messages/:agentId/:whatsappAccountId')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getAgentMessages (@Param('agentId') agentId: string, @Param('whatsappAccountId') whatsappAccountId: string) {
+    try {
+      const data = this.whatsappService.getAgentMessages(agentId, whatsappAccountId);
+      return { statusCode: HTTP_STATUS.OK, data };
+      
+    } catch (err) {
+      if (err instanceof ConflictException) {
+        throw new NotFoundException({ statusCode: err.getStatus(), message: err.message });
+
+      }
+
+      if (err instanceof NotFoundException) {
+        throw new NotFoundException({ statusCode: HTTP_STATUS.NOT_FOUND, message: err.message });
+      }
+      console.log(err);
+      throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    }
+
+  }
 }

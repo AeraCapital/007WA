@@ -241,8 +241,43 @@ export class WhatsappService {
 
         const agents = await this.userService.getAgents();
 
+        const agentsAndContacts = await agents.map(async agent => {
+            const contacts = await this.accountRepository.find({
+                where: {
+                    owner: agent
+                }
+            });
+            agent.contacts = await contacts;
+            return agent;
+        });
 
-        return await Promise.all(agents);
+        return await Promise.all(agentsAndContacts);
 
+    }
+
+    async getAgentMessages (agentId: string, whatsappAccountId: string) {
+
+        const agent = await this.userService.findOne(agentId);
+
+        if (!agent) {
+            throw new NotFoundException(`Agent with ID ${ agentId } not found!`);
+        }
+
+
+        const whatsappAccount = await this.accountRepository.findBy({ id: whatsappAccountId });
+
+        if (!whatsappAccount) {
+            throw new NotFoundException(`Whatsapp Account with ID ${ whatsappAccountId } not found!`);
+        }
+
+        const whatsappMessages = this.whatsappMessagesRepository.find({
+            where: {
+                user: agent,
+                client: whatsappAccount
+
+            }
+        });
+
+        return whatsappMessages;
     }
 }
