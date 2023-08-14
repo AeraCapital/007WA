@@ -34,15 +34,25 @@ const EditKeywordModal = ({ isOpen, closeModal, data }) => {
     }),
 
     onSubmit: (values) => {
-      console.log(data);
-      dispatch(editKeyword(values, data.id));
+      const editedData = {};
+
+      if (values.keyword !== data.keyword) {
+        editedData.keyword = values.keyword;
+      }
+      if (values.reply !== data.reply) {
+        editedData.reply = values.reply;
+      }
+      if (Object.keys(editedData).length > 0) {
+        dispatch(editKeyword(editedData, data.id));
+      } else {
+        closeModal();
+      }
     },
   });
 
   useEffect(() => {
     if (success) {
       closeModal();
-      console.log("render");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success]);
