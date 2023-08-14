@@ -25,6 +25,7 @@ const SidebarContent = (props) => {
     { path: "/chat", icon: "bx bx-chat", label: "Chat", isAdminOnly: false },
     { path: "/keywords", icon: "bx bx-file", label: "Keywords", isAdminOnly: true },
     { path: "/agents", icon: "bx bx-street-view", label: "Agents", isAdminOnly: true },
+    { path: "/messages", icon: "bx bx-collection", label: "Messages", isAdminOnly: true },
   ];
 
   return (

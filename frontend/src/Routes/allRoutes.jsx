@@ -29,6 +29,7 @@ import ResetPasswordSuccess from "pages/Authentication/reset-password-success";
 import UserProfile from "pages/Authentication/user-profile";
 import Playground from "pages/AuthenticationInner/page-confirm-mail";
 import Chat from "pages/Chat";
+import Messages from "pages/Messages";
 import Keywords from "pages/Keywords";
 
 const authProtectedRoutes = [
@@ -43,6 +44,7 @@ const authProtectedRoutes = [
 const adminOnlyRoutes = [
   { path: "/keywords", component: <Keywords /> },
   { path: "/agents", component: <Agents /> },
+  { path: "/messages", component: <Messages /> },
 ];
 
 const publicRoutes = [

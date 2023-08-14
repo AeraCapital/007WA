@@ -1,4 +1,7 @@
 // Chats;
+export * from "./messages/thunk";
+
+// Chats;
 export * from "./whatsapp/thunk";
 
 //Agents

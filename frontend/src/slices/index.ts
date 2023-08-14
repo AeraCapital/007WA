@@ -11,8 +11,10 @@ import RegisterReducer from "./auth/register/reducer";
 import KeywordsReducer from "./keywords/reducer";
 import AgentsReducer from "./agents/reducer";
 import WhatsappReducer from "./whatsapp/reducer";
+import MessagesReducer from "./messages/reducer";
 
 const rootReducer = combineReducers({
+  Messages: MessagesReducer,
   Whatsapp: WhatsappReducer,
   Keywords: KeywordsReducer,
   Agents: AgentsReducer,

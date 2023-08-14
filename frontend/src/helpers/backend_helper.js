@@ -42,3 +42,8 @@ export const postCreateSession = () => api.create(url.CREATE_SESSION);
 export const fetchContacts = () => api.get(url.GET_CONTACTS, null);
 export const fetchMessage = (id) => api.get(url.GET_MESSAGE + id, null);
 export const postMessage = (data) => api.create(url.POST_MESSAGE, data);
+
+//Messages
+export const fetchAgentsContacts = () => api.get(url.GET_AGENT_CONTACTS, null);
+export const fetchAgentMessages = (agentId, contactId) =>
+  api.get(url.GET_AGENT_MESSAGES + agentId + "/" + contactId, null);
