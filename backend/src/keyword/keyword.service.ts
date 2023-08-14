@@ -25,7 +25,7 @@ export class KeywordService {
     }
 
     async updateKeyword (id: string, setKeywordDto: SetKeywordDto) {
-        const keywordReply = await this.keywordRepository.findOneBy({ id: id });
+        const keywordReply = await this.keywordRepository.preload({id: id, ...setKeywordDto});
         if (!keywordReply) {
             throw new NotFoundException(`Keyword with ID ${ id } not found`);
         }
