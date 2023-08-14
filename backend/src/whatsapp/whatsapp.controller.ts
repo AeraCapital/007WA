@@ -129,9 +129,9 @@ export class WhatsappController {
   @UsePipes(new ValidationPipe({ transform: true }))
   async getAgentMessages (@Param('agentId') agentId: string, @Param('whatsappAccountId') whatsappAccountId: string) {
     try {
-      const data = this.whatsappService.getAgentMessages(agentId, whatsappAccountId);
+      const data = await this.whatsappService.getAgentMessages(agentId, whatsappAccountId);
       return { statusCode: HTTP_STATUS.OK, data };
-      
+
     } catch (err) {
       if (err instanceof ConflictException) {
         throw new NotFoundException({ statusCode: err.getStatus(), message: err.message });

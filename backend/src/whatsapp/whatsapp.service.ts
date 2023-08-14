@@ -270,7 +270,7 @@ export class WhatsappService {
             throw new NotFoundException(`Whatsapp Account with ID ${ whatsappAccountId } not found!`);
         }
 
-        const whatsappMessages = this.whatsappMessagesRepository.find({
+        const whatsappMessages = await this.whatsappMessagesRepository.find({
             where: {
                 user: agent,
                 client: whatsappAccount
