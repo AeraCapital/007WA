@@ -1,9 +1,11 @@
 // utils/socket.js
-import { io } from "socket.io-client";
-import { CONNECTION_STATE, qrDataReceived, udpateWhatsAppState } from "slices/whatsapp/reducer";
+import newMessageAudio from "assets/sound/newMessage.mp3";
 import { handleSocketMessage } from "slices/thunk";
+import { CONNECTION_STATE, qrDataReceived, udpateWhatsAppState } from "slices/whatsapp/reducer";
+import { io } from "socket.io-client";
 
 const setupSocket = (userId, dispatch) => {
+  const newMessageSound = new Audio(newMessageAudio);
   console.log("setupSocket success");
   // const serverURL = "http://localhost:3002"; //"https://sassy-apple-dev.dhoon.co";
   const serverURL = "https://sassy-apple-dev.dhoon.co";
@@ -38,6 +40,9 @@ const setupSocket = (userId, dispatch) => {
     } else if (data.type === "chat") {
       if (data.data) {
         dispatch(handleSocketMessage(data.data));
+        if (data.data.type === "in") {
+          newMessageSound.play();
+        }
       } else {
         console.log("New message received", data);
       }
