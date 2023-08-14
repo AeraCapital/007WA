@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Keyword } from './entities/keyword.entity';
 import { SetKeywordDto } from './dto/setKeyword.dto';
+import { UpdateKeywordDto } from './dto/updateKeyword';
 
 @Injectable()
 export class KeywordService {
@@ -24,19 +25,22 @@ export class KeywordService {
         return await this.keywordRepository.save(keywordReply);
     }
 
-    async updateKeyword (id: string, setKeywordDto: SetKeywordDto) {
-        const keywordReply = await this.keywordRepository.preload({id: id, ...setKeywordDto});
+    async updateKeyword (id: string, updateKeywordDto: UpdateKeywordDto) {
+        const keywordReply = await this.keywordRepository.preload({id: id, ...updateKeywordDto});
+
         if (!keywordReply) {
             throw new NotFoundException(`Keyword with ID ${ id } not found`);
         }
+        if (updateKeywordDto.keyword){
+            const existingKeyword = await this.keywordRepository.findOneBy({ keyword: updateKeywordDto.keyword });
+    
+            if (existingKeyword) {
+                throw new ConflictException(`Keyword '${ updateKeywordDto.keyword }' already exists`);
+            }
 
-        const existingKeyword = await this.keywordRepository.findOneBy({ keyword: setKeywordDto.keyword });
-
-        if (existingKeyword) {
-            throw new ConflictException(`Keyword '${ setKeywordDto.keyword }' already exists`);
         }
 
-        const updatedKeywordReply = this.keywordRepository.merge(keywordReply, setKeywordDto);
+        const updatedKeywordReply = this.keywordRepository.merge(keywordReply, updateKeywordDto);
         return this.keywordRepository.save(updatedKeywordReply);
     }
 
