@@ -37,6 +37,7 @@ const authProtectedRoutes = [
   { path: "/change-password", component: <ChangePassword /> },
   { path: "/chat", component: <Chat /> },
   { path: "/", exact: true, component: <Navigate to="/chat" /> },
+  { path: "/logout", component: <Logout /> },
 ];
 
 const adminOnlyRoutes = [
@@ -47,7 +48,6 @@ const adminOnlyRoutes = [
 const publicRoutes = [
   { path: "/playground", component: <Playground /> },
   { path: "/login", component: <Login /> },
-  { path: "/logout", component: <Logout /> },
   { path: "/forgot-password", component: <ForgotPassword /> },
   { path: "/register", component: <SignUp /> },
   { path: "/reset-password/:id", component: <ResetPassword /> },
@@ -59,4 +59,3 @@ const publicRoutes = [
   { path: "/pages-500", component: <Pages500 /> },
 ];
 export { adminOnlyRoutes, authProtectedRoutes, publicRoutes };
-

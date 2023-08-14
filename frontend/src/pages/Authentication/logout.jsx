@@ -6,6 +6,7 @@ import { logoutUser } from "../../slices/thunk";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
+import { CONNECTION_STATE, udpateWhatsAppState } from "slices/whatsapp/reducer";
 
 const Logout = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Logout = () => {
   }));
 
   useEffect(() => {
+    dispatch(udpateWhatsAppState(CONNECTION_STATE.DISCONNECTED));
     dispatch(logoutUser());
   }, [dispatch]);
 
