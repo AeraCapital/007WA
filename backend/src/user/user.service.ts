@@ -72,7 +72,7 @@ export class UserService {
     }
 
     async getAgents (): Promise<User[]> {
-        return this.usersRepository.findBy({ role: USER_ROLE.AGENT });
+        return await this.usersRepository.findBy({ role: USER_ROLE.AGENT });
     }
 
     async createAgent (createAgentDto: CreateAgentDto): Promise<User> {

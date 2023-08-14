@@ -102,4 +102,25 @@ export class WhatsappController {
       throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @Get('/admin/contacts')
+  @UseGuards(JwtAuthGuard)
+  async agentsWithContacts () {
+    try {
+      const data = await this.whatsappService.getAgentsAndContacts();
+      return { statusCode: HTTP_STATUS.OK, data };
+    } catch (err) {
+      if (err instanceof ConflictException) {
+        throw new NotFoundException({ statusCode: err.getStatus(), message: err.message });
+
+      }
+
+      if (err instanceof NotFoundException) {
+        throw new NotFoundException({ statusCode: HTTP_STATUS.NOT_FOUND, message: err.message });
+      }
+      console.log(err);
+      throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+
+    }
+  }
 }

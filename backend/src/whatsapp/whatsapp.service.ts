@@ -236,4 +236,13 @@ export class WhatsappService {
             }
         });
     }
+
+    async getAgentsAndContacts () {
+
+        const agents = await this.userService.getAgents();
+
+
+        return await Promise.all(agents);
+
+    }
 }
