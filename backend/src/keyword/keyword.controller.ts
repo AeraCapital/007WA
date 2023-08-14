@@ -37,6 +37,7 @@ export class KeywordController {
     async updateKeyword (@Param('id') id: string, @Body() updateKeywordDto: UpdateKeywordDto) {
         try {
             const data = await this.keywordReplyService.updateKeyword(id, updateKeywordDto);
+            console.log(updateKeywordDto)
             return { statusCode: HTTP_STATUS.OK, data, message: "Keyword Updated!" };
         } catch (err) {
 
