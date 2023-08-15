@@ -1,6 +1,7 @@
 import {
   fetchContacts,
   fetchMessage,
+  postAutopilot,
   postCreateSession,
   postMessage,
 } from "../../helpers/backend_helper.js";
@@ -14,6 +15,7 @@ import {
   getMessagesSuccess,
   sendMessageSuccess,
   storeFetchedMessages,
+  toggleAutoPilotSuccess,
   udpateWhatsAppState,
 } from "./reducer";
 // import { messages } from "./mock-data-contacts.jsx";
@@ -86,6 +88,7 @@ export const handleSocketMessage = (data) => async (dispatch, getState) => {
         phone: data.client.phone,
         name: data.client.name,
         newMessageCount: 1, //got a new message
+        isAutopilot: data.client.isAutopilot,
       })
     );
   } else {
@@ -104,5 +107,17 @@ export const handleSocketMessage = (data) => async (dispatch, getState) => {
         },
       })
     );
+  }
+};
+
+export const toggleAutoPilot = (data, id) => async (dispatch, getState) => {
+  try {
+    let response = await postAutopilot({ status: data }, id);
+    const state = getState();
+    const activeContact = state.Whatsapp.activeContact;
+    const updatedActiveContact = { ...activeContact, ...response.data };
+    dispatch(toggleAutoPilotSuccess(updatedActiveContact));
+  } catch (error) {
+    dispatch(connectionError(error));
   }
 };

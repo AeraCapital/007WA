@@ -3,12 +3,19 @@ import { formatMobileNumber } from "helpers/utils";
 import { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import { Card } from "reactstrap";
+import { useDispatch } from "react-redux";
+import { Card, Col, Row } from "reactstrap";
+import { toggleAutoPilot } from "slices/thunk";
 import ChatInput from "./chat-input";
 import MessageItem from "./message-item";
 
 const ChatInterface = ({ messages, activeContact }) => {
+  const dispatch = useDispatch();
   const [messageBox, setMessageBox] = useState(null);
+
+  const handleAutoPilot = () => {
+    dispatch(toggleAutoPilot(!activeContact.isAutopilot, activeContact.id));
+  };
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -22,10 +29,28 @@ const ChatInterface = ({ messages, activeContact }) => {
   return activeContact ? (
     <div className="w-100">
       <Card>
-        <div className="p-4 border-bottom ">
-          <h5 className="font-size-15 mb-1">{formatMobileNumber(activeContact.phone)}</h5>
-        </div>
         <div>
+          <div className="p-4 border-bottom ">
+            <Row className="align-items-center">
+              <Col>
+                <h5 className="font-size-15 mb-1">{formatMobileNumber(activeContact.phone)}</h5>
+              </Col>
+              <Col className="d-flex justify-content-end align-items-center">
+                <label className="form-check-label mx-2" htmlFor="autopilotSwitch">
+                  Autopilot
+                </label>
+                <div className="form-check form-switch form-switch-md">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="autopilotSwitch"
+                    checked={activeContact.isAutopilot}
+                    onChange={handleAutoPilot}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </div>
           {/* Chat conversation */}
           <div className="chat-conversation p-3 pt-0">
             <ul className="list-unstyled">

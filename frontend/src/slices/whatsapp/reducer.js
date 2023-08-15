@@ -95,6 +95,11 @@ const KeywordsSlice = createSlice({
         state.contacts[contactIndex].newMessageCount += 1;
       }
     },
+    toggleAutoPilotSuccess(state, action) {
+      state.activeContact = action.payload;
+      const contactIndex = state.contacts.findIndex((contact) => contact.id === action.payload.id);
+      state.contacts[contactIndex].isAutoPilot = action.payload.isAutoPilot;
+    },
   },
 });
 
@@ -114,6 +119,7 @@ export const {
   udpateWhatsAppState,
   qrDataReceived,
   addNewMessageCount,
+  toggleAutoPilotSuccess,
 } = KeywordsSlice.actions;
 
 export default KeywordsSlice.reducer;
