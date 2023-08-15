@@ -151,10 +151,10 @@ export class WhatsappController {
   @Post('autopilot/:accountId')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
-  async updateAccountAutopilot (@Param('accountId') accountId: string, @Request() request, updateAccountDto: UpdateAccountDto) {
+  async updateAccountAutopilot (@Param('accountId') accountId: string, @Request() request, @Body() updateAccountDto: UpdateAccountDto) {
     try {
       const { id } = request.user;
-      console.log(updateAccountDto)
+
       const data = this.whatsappService.updateAutopilot(id, accountId, updateAccountDto.status);
 
       return { statusCode: HTTP_STATUS.OK, data };
