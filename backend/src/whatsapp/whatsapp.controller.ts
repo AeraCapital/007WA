@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { HTTP_STATUS } from 'src/common/constants/status';
 import { SendMessageDto } from './dto/sendMessage.dto';
 import { UserService } from 'src/user/user.service';
+import { UpdateAccountDto } from './dto/update-account.dto';
 
 @Controller('whatsapp')
 export class WhatsappController {
@@ -145,5 +146,29 @@ export class WhatsappController {
       throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
 
+  }
+
+  @Post('autopilot/:accountId')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updateAccountAutopilot (@Param('accountId') accountId: string, @Request() request, updateAccountDto: UpdateAccountDto) {
+    try {
+      const { id } = request.user;
+      const data = this.whatsappService.updateAutopilot(id, accountId, updateAccountDto.status);
+
+      return { statusCode: HTTP_STATUS.OK, data };
+
+    } catch (err) {
+      if (err instanceof ConflictException) {
+        throw new NotFoundException({ statusCode: err.getStatus(), message: err.message });
+
+      }
+
+      if (err instanceof NotFoundException) {
+        throw new NotFoundException({ statusCode: HTTP_STATUS.NOT_FOUND, message: err.message });
+      }
+      console.log(err);
+      throw new HttpException({ statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR, message: 'Unexpected error!' }, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    }
   }
 }

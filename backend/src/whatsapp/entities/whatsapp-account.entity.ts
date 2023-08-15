@@ -21,4 +21,6 @@ export class WhatsAppAccount {
     @JoinColumn()
     owner; User;
 
+    @Column({default:true})
+    isAutopilot: Boolean
 }

@@ -280,4 +280,24 @@ export class WhatsappService {
 
         return whatsappMessages;
     }
+
+    async updateAutopilot (userId: string, accountId: string, status: boolean) {
+
+        const user = await this.userService.findOne(userId);
+        if (!user) {
+            throw new NotFoundException(`User with ID ${ userId } not found`);
+        }
+
+        const account = await this.accountRepository.findOneBy({
+            owner: user,
+            id: accountId
+        });
+
+        if (!account) {
+            throw new NotFoundException(`Account with ID ${ accountId } not found`);
+        }
+
+        account.isAutopilot = status;
+        return this.accountRepository.save(account);
+    }
 }
