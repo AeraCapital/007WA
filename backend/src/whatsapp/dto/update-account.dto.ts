@@ -1,6 +1,6 @@
-import { IsString } from 'class-validator';
+import { IsBoolean } from 'class-validator';
 
 export class UpdateAccountDto {
-  @IsString()
+  @IsBoolean()
   status: boolean;
 }
