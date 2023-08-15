@@ -77,7 +77,10 @@ export class WhatsappService {
 
                 this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data: newMessage });
                 console.log("OnMessage", clientAccount);
-                this.handleReplies(clientAccount, msg.body, user, msg.to);
+                if (clientAccount.isAutopilot) {
+
+                    this.handleReplies(clientAccount, msg.body, user, msg.to);
+                }
             }
         });
 
@@ -135,6 +138,7 @@ export class WhatsappService {
     async handleReplies (client: WhatsAppAccount, body: string, user: User, to: string) {
 
         let reply = await this.keywordService.getReply(body);
+        
         if (!reply) {
             reply = "I couldn't understand your query. Our customer support representative will connect with you in a moment.";
         }
