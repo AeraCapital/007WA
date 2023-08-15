@@ -154,6 +154,7 @@ export class WhatsappController {
   async updateAccountAutopilot (@Param('accountId') accountId: string, @Request() request, updateAccountDto: UpdateAccountDto) {
     try {
       const { id } = request.user;
+      console.log(updateAccountDto)
       const data = this.whatsappService.updateAutopilot(id, accountId, updateAccountDto.status);
 
       return { statusCode: HTTP_STATUS.OK, data };
