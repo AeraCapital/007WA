@@ -22,5 +22,5 @@ export class WhatsAppAccount {
     owner; User;
 
     @Column({default:true})
-    isAutopilot: Boolean
+    isAutopilot: boolean
 }
