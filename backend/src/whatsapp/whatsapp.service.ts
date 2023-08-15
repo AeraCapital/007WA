@@ -178,7 +178,7 @@ export class WhatsappService {
         const account = await this.accountRepository.findOne({
             where: {
                 owner: {
-                    id: user.id
+                    id: id
                 },
                 id: accountId
             }
