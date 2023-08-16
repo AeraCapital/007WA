@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Alert,
   Card,
@@ -32,28 +32,21 @@ const UserProfile = () => {
   document.title = "Profile | ";
 
   const dispatch = useDispatch();
-
-  const [firstName, setfirstName] = useState("");
-  const [middleName, setMiddleName] = useState("");
-  const [lastName, setLastName] = useState("");
-
   const { error, success, loading } = useSelector((state) => ({
     loading: state.Profile.loading,
     error: state.Profile.error,
     success: state.Profile.success,
   }));
 
+  const { firstName, middleName, lastName } = useSelector((state) => state.Login.user);
+
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      setfirstName(obj.user.firstName);
-      setMiddleName(obj.user.middleName);
-      setLastName(obj.user.lastName);
-      if (success || error) {
-        setTimeout(() => {
-          dispatch(resetProfileFlag());
-        }, 3000);
-      }
+    if (success || error) {
+      const resetTimer = setTimeout(() => {
+        dispatch(resetProfileFlag());
+      }, 3000);
+
+      return () => clearTimeout(resetTimer);
     }
   }, [dispatch, success, error]);
 
@@ -150,8 +143,6 @@ const UserProfile = () => {
               </Card>
             </Col>
           </Row>
-
-          {/* <h4 className="card-title mb-4">Change User Name</h4> */}
         </Container>
       </div>
     </React.Fragment>

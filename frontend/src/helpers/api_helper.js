@@ -1,119 +1,76 @@
 import axios from "axios";
 
-// default
-// axios.defaults.baseURL = "http://localhost:3002";
+// Set default base URL and content type
 axios.defaults.baseURL = "https://sassy-apple-dev.dhoon.co";
-
-// content type
 axios.defaults.headers.post["Content-Type"] = "application/json";
-// content type
-// let authUser = (localStorage.getItem("authUser"));
 
-// intercepting to capture errors
+// Define common error messages
+const errorMessages = {
+  500: "Internal Server Error",
+  401: "Invalid Credentials",
+  404: "Sorry! The data you are looking for could not be found",
+  400: "Something went wrong.",
+  409: "Something went wrong.",
+  default: "Something went wrong",
+};
+
+// Intercepting to capture errors
 axios.interceptors.response.use(
   function (response) {
-    return response.data ? response.data : response;
+    return response.data || response;
   },
   function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    let message = "Something went wrong";
-    console.log("From Interceptior", error);
-    switch (error.response?.data.statusCode) {
-      case 500:
-        message = error.response.data.message || "Internal Server Error";
-        break;
-      case 401:
-        message = error.response.data.message || "Invalid Credentials";
-        break;
-      case 404:
-        message =
-          error.response.data.message || "Sorry! the data you are looking for could not be found";
-        break;
-      case 400:
-        message = error.response.data.message[0] || "Something went wrong.";
-        break;
-      case 409:
-        message = error.response.data.message || "Something went wrong.";
-        break;
-      default:
-        message = error.message || "Something went wrong";
-    }
+    const statusCode = error.response?.data.statusCode;
+    const message =
+      error.response?.data.message ||
+      errorMessages[statusCode] ||
+      error.message ||
+      errorMessages.default;
     return Promise.reject(message);
   }
 );
-/**
- * Sets the default authorization
- * @param {*} token
- */
+
+// Sets the default authorization headers
 const setAuthorization = () => {
-  const jwtToken = getLoggedinUser()?.access_token;
-  if (jwtToken) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
+  const root = JSON.parse(localStorage.getItem("persist:root"));
+  const accessToken = JSON.parse(root.Login).accessToken;
+
+  if (accessToken) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   } else {
     delete axios.defaults.headers.common["Authorization"];
   }
 };
 
 class APIClient {
-  /**
-   * Fetches data from given url
-   */
-
-  //  get = (url, params) => {
-  //   return axios.get(url, params);
-  // };
+  // Fetches data from given url
   get = (url, params) => {
-    setAuthorization();
-
-    let response;
-
-    let paramKeys = [];
-
+    setAuthorization(); // Clear Authorization headers for unauthenticated requests
     if (params) {
-      Object.keys(params).map((key) => {
-        paramKeys.push(key + "=" + params[key]);
-        return paramKeys;
-      });
-
-      const queryString = paramKeys && paramKeys.length ? paramKeys.join("&") : "";
-      response = axios.get(`${url}?${queryString}`, params);
+      const queryString = new URLSearchParams(params).toString();
+      return axios.get(`${url}?${queryString}`);
     } else {
-      response = axios.get(`${url}`, params);
+      return axios.get(url);
     }
-    return response;
   };
-  /**
-   * post given data to url
-   */
+
+  // Post given data to url
   create = (url, data) => {
     setAuthorization();
     return axios.post(url, data);
   };
-  /**
-   * Updates data
-   */
-  // update = (url, data) => {
-  //   return axios.patch(url, data).then((object) => object.data);
-  // };
 
+  // Updates data using HTTP PUT
   put = (url, data) => {
     setAuthorization();
     return axios.put(url, data);
   };
 
+  // Deletes data at the specified URL
   delete = (url) => {
     setAuthorization();
     return axios.delete(url);
   };
 }
 
-const getLoggedinUser = () => {
-  const user = localStorage.getItem("authUser");
-  if (!user) {
-    return null;
-  } else {
-    return JSON.parse(user);
-  }
-};
-
-export { APIClient, getLoggedinUser, setAuthorization };
+export { APIClient, setAuthorization };

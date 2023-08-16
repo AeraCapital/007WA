@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 
 //i18n
@@ -15,17 +15,7 @@ const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
 
-  const [firstName, setFirstName] = useState("Admin");
-
-  const { success } = useSelector((state) => ({
-    success: state.Profile.success,
-  }));
-
-  useEffect(() => {
-    const obj = JSON.parse(localStorage.getItem("authUser") || "");
-    setFirstName(obj.user.firstName);
-  }, [success]);
-
+  const { firstName } = useSelector((state) => state.Login.user);
   return (
     <React.Fragment>
       <Dropdown isOpen={menu} toggle={() => setMenu(!menu)} className="d-inline-block">

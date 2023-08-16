@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const initialState = {
-  user: "",
+  user: null,
+  accessToken: null,
   error: null,
   loading: false,
-  isUserLogout: false,
+  isLoggedIn: false,
 };
 
 const loginSlice = createSlice({
@@ -19,20 +20,36 @@ const loginSlice = createSlice({
       state.error = null;
     },
     loginSuccess(state, action) {
-      state.user = action.payload;
+      state.user = action.payload.user;
+      state.accessToken = action.payload.access_token;
       state.loading = false;
       state.error = null;
+      state.isLoggedIn = true;
     },
     loginError(state, action) {
-      console.log(action.payload);
       state.error = action.payload;
       state.loading = false;
     },
-    logoutUserSuccess(state, action) {
-      state.isUserLogout = true;
+    logoutUserSuccess(state) {
+      state.isLoggedIn = false;
+      state.user = null;
+      state.accessToken = null;
+    },
+    updateUser(state, action) {
+      state.user = action.payload;
+    },
+    udpateWhatsappSession(state, action) {
+      state.user = { ...state.user, activeWhatsappSession: action.payload };
     },
   },
 });
-export const { loginSuccess, loginError, resetLoginFlag, logoutUserSuccess, startLoading } =
-  loginSlice.actions;
+export const {
+  loginSuccess,
+  loginError,
+  resetLoginFlag,
+  logoutUserSuccess,
+  startLoading,
+  updateUser,
+  udpateWhatsappSession,
+} = loginSlice.actions;
 export default loginSlice.reducer;

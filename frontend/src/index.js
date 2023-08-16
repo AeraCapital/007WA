@@ -5,18 +5,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import rootReducer from "./slices";
-
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./slices";
 const root = ReactDOM.createRoot(document.getElementById("root"));
-const store = configureStore({ reducer: rootReducer, devTools: true });
 root.render(
   <Provider store={store}>
-    <React.Fragment>
+    <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </React.Fragment>
+    </PersistGate>
   </Provider>
 );
 

@@ -1,28 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import "./assets/scss/theme.scss";
 import NonAuthLayout from "./Layouts/NonLayout";
 import VerticalLayout from "./Layouts/VerticalLayout";
 import { adminOnlyRoutes, authProtectedRoutes, publicRoutes } from "./Routes/allRoutes";
+import "./assets/scss/theme.scss";
 
 //constants
 import AuthProtected from "Routes/AuthProtected";
 import { useSelector } from "react-redux";
 
 const App = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  const { user } = useSelector((state) => ({
-    user: state.Login.user,
-  }));
-
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      setIsAdmin(obj.user.role === "admin");
-    }
-  }, [user]);
+  const { role } = useSelector((state) => state.Login.user) || {};
+  const isAdmin = role === "admin";
 
   return (
     <React.Fragment>

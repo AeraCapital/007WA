@@ -1,5 +1,6 @@
 // utils/socket.js
 import newMessageAudio from "assets/sound/newMessage.mp3";
+import { udpateWhatsappSession } from "slices/auth/login/reducer";
 import { handleSocketMessage } from "slices/thunk";
 import { CONNECTION_STATE, qrDataReceived, udpateWhatsAppState } from "slices/whatsapp/reducer";
 import { io } from "socket.io-client";
@@ -25,16 +26,11 @@ const setupSocket = (userId, dispatch) => {
       console.log("QR received");
       dispatch(qrDataReceived(data.qr));
     } else if (data.type === "logout") {
-      console.log("Logged out");
-      let authData = JSON.parse(localStorage.getItem("authUser"));
-      authData.user.activeWhatsappSession = false;
-      localStorage.setItem("authUser", JSON.stringify(authData));
+      dispatch(udpateWhatsappSession(false));
       dispatch(udpateWhatsAppState(CONNECTION_STATE.DISCONNECTED));
     } else if (data.type === "authentication") {
       if (data.success) {
-        let authData = JSON.parse(localStorage.getItem("authUser"));
-        authData.user.activeWhatsappSession = true;
-        localStorage.setItem("authUser", JSON.stringify(authData));
+        dispatch(udpateWhatsappSession(true));
         dispatch(udpateWhatsAppState(CONNECTION_STATE.CONNECTED));
       }
     } else if (data.type === "chat") {

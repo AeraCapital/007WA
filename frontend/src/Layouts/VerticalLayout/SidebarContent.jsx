@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
@@ -7,17 +7,8 @@ import withRouter from "../../Components/Common/withRouter";
 const SidebarContent = (props) => {
   const ref = useRef();
 
-  const [isAdmin, setIsAdmin] = useState(false);
-  const { user } = useSelector((state) => ({
-    user: state.Login.user,
-  }));
-
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      setIsAdmin(obj.user.role === "admin");
-    }
-  }, [user]);
+  const { role } = useSelector((state) => state.Login.user) || {};
+  const isAdmin = role === "admin";
 
   const isActivePage = (path) => props.router.location.pathname === path;
 

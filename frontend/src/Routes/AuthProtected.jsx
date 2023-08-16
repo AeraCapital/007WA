@@ -7,17 +7,16 @@ import { CONNECTION_STATE, udpateWhatsAppState } from "slices/whatsapp/reducer";
 const AuthProtected = (props) => {
   const [socket, setSocket] = useState(null);
   const dispatch = useDispatch();
-  const { whatsAppState } = useSelector((state) => ({
+  const { whatsAppState, isLoggedIn, user } = useSelector((state) => ({
     whatsAppState: state.Whatsapp.whatsAppState,
+    isLoggedIn: state.Login.isLoggedIn,
+    user: state.Login.user,
   }));
 
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      if (obj.user.activeWhatsappSession) {
-        dispatch(udpateWhatsAppState(CONNECTION_STATE.CONNECTED));
-        setSocket(setupSocket(obj.user.id, dispatch));
-      }
+    if (user?.activeWhatsappSession) {
+      dispatch(udpateWhatsAppState(CONNECTION_STATE.CONNECTED));
+      setSocket(setupSocket(user.id, dispatch));
     }
     return () => {
       if (socket) {
@@ -30,8 +29,7 @@ const AuthProtected = (props) => {
 
   useEffect(() => {
     if (whatsAppState === CONNECTION_STATE.WAITING_QR) {
-      const obj = JSON.parse(localStorage.getItem("authUser") || "");
-      setSocket(setupSocket(obj.user.id, dispatch));
+      setSocket(setupSocket(user.id, dispatch));
     }
     if (whatsAppState === CONNECTION_STATE.DISCONNECTED) {
       if (socket) {
@@ -42,10 +40,10 @@ const AuthProtected = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, whatsAppState]);
 
-  if (!localStorage.getItem("authUser")) {
-    return <Navigate to={{ pathname: "/login" }} />;
+  if (isLoggedIn) {
+    return <React.Fragment>{props.children}</React.Fragment>;
   }
-  return <React.Fragment>{props.children}</React.Fragment>;
+  return <Navigate to={{ pathname: "/login" }} />;
 };
 
 export default AuthProtected;
