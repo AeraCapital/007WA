@@ -28,29 +28,26 @@ const AddKeywordModal = ({ isOpen, closeModal }) => {
 
   const validation = useFormik({
     enableReinitialize: true, // enableReinitialize : use this flag when initial values needs to be changed
-    initialValues: { keyword: "", reply: "" },
+    initialValues: { keyword: "", reply: "", replyAfter: 0 },
 
     validationSchema: Yup.object({
       keyword: Yup.string().required("Please Enter a Keyword"),
       reply: Yup.string().required("Please Enter a Reply"),
+      replyAfter: Yup.number()
+        .min(0, "Value must be non-negative")
+        .required("Please Enter a Value"),
     }),
 
     onSubmit: (values) => {
-      console.log(values);
       dispatch(addKeyword(values));
     },
   });
 
   useEffect(() => {
-    // Reset success and error states in Redux store when component unmounts
     if (success) {
       validation.resetForm();
       closeModal();
     }
-    // return () => {
-    //   console.log("Component unmounting");
-    //   dispatch(resetFlags());
-    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, success]);
 
@@ -106,6 +103,25 @@ const AddKeywordModal = ({ isOpen, closeModal }) => {
               />
               {validation.touched.reply && validation.errors.reply ? (
                 <FormFeedback type="invalid">{validation.errors.reply}</FormFeedback>
+              ) : null}
+            </div>
+
+            <div className="mb-3">
+              <Label className="form-label">Reply After (in seconds)</Label>
+              <Input
+                name="replyAfter"
+                className="form-control"
+                placeholder="Enter time in seconds"
+                type="number"
+                onChange={validation.handleChange}
+                onBlur={validation.handleBlur}
+                value={validation.values.replyAfter}
+                invalid={
+                  validation.touched.replyAfter && validation.errors.replyAfter ? true : false
+                }
+              />
+              {validation.touched.replyAfter && validation.errors.replyAfter ? (
+                <FormFeedback type="invalid">{validation.errors.replyAfter}</FormFeedback>
               ) : null}
             </div>
           </ModalBody>

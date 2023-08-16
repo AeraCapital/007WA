@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, CardBody, Col, Row } from "reactstrap";
+import { resetFlags } from "slices/keywords/reducer";
 import { fetchKeywordsList } from "slices/thunk";
 import Breadcrumbs from "../../Components/Common/Breadcrumb";
 import TableContainer from "../../Components/Common/TableContainer";
@@ -27,9 +28,18 @@ const Keywords = () => {
     setDisplayEditModal(true);
   };
 
-  const closeAddModal = () => setDisplayAddModal(false);
-  const closeEditModal = () => setDisplayEditModal(false);
-  const closeDeleteModal = () => setDisplayDeleteModal(false);
+  const closeAddModal = () => {
+    dispatch(resetFlags());
+    setDisplayAddModal(false);
+  };
+  const closeEditModal = () => {
+    dispatch(resetFlags());
+    setDisplayEditModal(false);
+  };
+  const closeDeleteModal = () => {
+    dispatch(resetFlags());
+    setDisplayDeleteModal(false);
+  };
 
   const columns = useMemo(
     () => [
@@ -42,6 +52,12 @@ const Keywords = () => {
       {
         Header: "Reply",
         accessor: "reply",
+        Filter: false,
+        disableSortBy: true,
+      },
+      {
+        Header: "Reply After",
+        accessor: "replyAfter",
         Filter: false,
         disableSortBy: true,
       },
@@ -73,10 +89,9 @@ const Keywords = () => {
   );
   const dispatch = useDispatch();
 
-  const { loading, data, error } = useSelector((state) => ({
+  const { data, error } = useSelector((state) => ({
     data: state.Keywords.data,
     error: state.Keywords.error,
-    loading: state.Keywords.loading,
   }));
 
   useEffect(() => {
@@ -86,7 +101,6 @@ const Keywords = () => {
   useEffect(() => {
     console.log(error);
   }, [error]);
-
   //meta title
   document.title = "Keywords | ";
 
@@ -106,19 +120,17 @@ const Keywords = () => {
             <Col>
               <Card>
                 <CardBody>
-                  {!loading && (
-                    <TableContainer
-                      columns={columns}
-                      data={data}
-                      isGlobalFilter={true}
-                      isAddOptions={true}
-                      handleAddOption={toggleAddModal}
-                      customPageSize={10}
-                      theadClass="table-light"
-                      tableClass="table table-bordered dt-responsive nowrap w-100 dataTable no-footer dtr-inline"
-                      customPageSizeOption={true}
-                    />
-                  )}
+                  <TableContainer
+                    columns={columns}
+                    data={data}
+                    isGlobalFilter={true}
+                    isAddOptions={true}
+                    handleAddOption={toggleAddModal}
+                    customPageSize={10}
+                    theadClass="table-light"
+                    tableClass="table table-bordered dt-responsive nowrap w-100 dataTable no-footer dtr-inline"
+                    customPageSizeOption={true}
+                  />
                 </CardBody>
               </Card>
             </Col>
