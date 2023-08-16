@@ -29,8 +29,8 @@ import ResetPasswordSuccess from "pages/Authentication/reset-password-success";
 import UserProfile from "pages/Authentication/user-profile";
 import Playground from "pages/AuthenticationInner/page-confirm-mail";
 import Chat from "pages/Chat";
-import Messages from "pages/Messages";
 import Keywords from "pages/Keywords";
+import Messages from "pages/Messages";
 
 const authProtectedRoutes = [
   { path: "/pages-starter", component: <PagesStarter /> },
@@ -59,5 +59,7 @@ const publicRoutes = [
   { path: "/pages-comingsoon", component: <PagesComingsoon /> },
   { path: "/pages-404", component: <Pages404 /> },
   { path: "/pages-500", component: <Pages500 /> },
+  { path: "*", component: <Pages404 /> },
 ];
 export { adminOnlyRoutes, authProtectedRoutes, publicRoutes };
+

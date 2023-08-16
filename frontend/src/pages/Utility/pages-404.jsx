@@ -21,8 +21,8 @@ const Pages404 = () => {
                 </h1>
                 <h4 className="text-uppercase">Sorry, page not found</h4>
                 <div className="mt-5 text-center">
-                  <Link className="btn btn-primary waves-effect waves-light " to="/dashboard">
-                    Back to Dashboard
+                  <Link className="btn btn-primary waves-effect waves-light " to="/chat">
+                    Go to Home
                   </Link>
                 </div>
               </div>
