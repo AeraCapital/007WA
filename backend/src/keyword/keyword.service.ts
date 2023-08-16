@@ -54,7 +54,7 @@ export class KeywordService {
         for (const kr of keywords) {
             if (message.includes(kr.keyword)) {
                 // If the message includes the keyword, send the associated reply
-                return kr.reply;
+                return kr;
                 break;
             }
         }

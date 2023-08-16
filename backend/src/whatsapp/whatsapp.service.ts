@@ -76,10 +76,13 @@ export class WhatsappService {
                 await this.whatsappMessagesRepository.save(newMessage);
 
                 this.whatsappGateway.sendDirectMessage(`${ user.id }`, { type: 'chat', data: newMessage });
-                console.log("OnMessage", clientAccount);
-                if (clientAccount.isAutopilot) {
 
+                const chat = await msg.getChat();
+                if (clientAccount.isAutopilot) {
+                    chat.sendSeen();
+                    chat.sendStateTyping();
                     this.handleReplies(clientAccount, msg.body, user, msg.to);
+                    chat.clearState();
                 }
             }
         });
@@ -137,18 +140,20 @@ export class WhatsappService {
 
     async handleReplies (client: WhatsAppAccount, body: string, user: User, to: string) {
 
-        let reply = await this.keywordService.getReply(body);
-        
+        let kr = await this.keywordService.getReply(body);
+        let reply = kr?.reply
         if (!reply) {
             reply = "I couldn't understand your query. Our customer support representative will connect with you in a moment.";
         }
 
-        await this.sendMessage(user, client, reply);
+
+        setTimeout(() => this.sendMessage(user, client, reply), (kr?.replyAfter * 1000));
+
     }
 
     async sendMessage (user: User, to: WhatsAppAccount, message: string) {
         const client = this.getClient(user.id);
-        console.log("on send message ", to);
+
         if (user.activeWhatsappSession === true) {
 
             if (client) {

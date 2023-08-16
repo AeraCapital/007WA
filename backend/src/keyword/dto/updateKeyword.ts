@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateKeywordDto {
     keyword: string;
@@ -6,4 +6,9 @@ export class UpdateKeywordDto {
     @IsOptional()
     @IsNotEmpty()
     reply: string;
+
+
+    @IsNumber()
+    @IsOptional()
+    replyAfter: number;
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class SetKeywordDto {
     @IsString()
@@ -8,4 +8,7 @@ export class SetKeywordDto {
     @IsString()
     @IsNotEmpty()
     reply: string;
+
+    @IsNumber()
+    replyAfter: number;
 }
