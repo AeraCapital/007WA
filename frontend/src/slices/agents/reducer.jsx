@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  fetching: false,
+  fetchError: null,
   data: [],
   loading: false,
   error: null,
@@ -11,6 +13,20 @@ const AgentsSlice = createSlice({
   name: "agents",
   initialState,
   reducers: {
+    startFetching(state) {
+      state.fetching = true;
+      state.fetchError = null;
+    },
+    fetchSuccess(state, action) {
+      state.fetching = false;
+      state.data = action.payload;
+      state.fetchError = null;
+    },
+    fetchError(state, action) {
+      state.fetching = false;
+      state.data = [];
+      state.fetchError = action.payload;
+    },
     startLoading(state) {
       state.loading = true;
       state.error = null;
@@ -29,14 +45,6 @@ const AgentsSlice = createSlice({
     addAgentFailed(state, action) {
       state.loading = false;
       state.success = false;
-      state.error = action.payload;
-    },
-    fetchAgentsSuccessful(state, action) {
-      state.loading = false;
-      state.data = action.payload;
-    },
-    fetchAgentsFailed(state, action) {
-      state.loading = false;
       state.error = action.payload;
     },
     updateAgentSuccess(state, action) {
@@ -76,20 +84,30 @@ const AgentsSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    resetAgentsState(state) {
+      state.fetching = false;
+      state.fetchError = null;
+      state.data = [];
+      state.loading = false;
+      state.error = null;
+      state.success = null;
+    },
   },
 });
 
 export const {
-  resetFlags,
+  startFetching,
+  fetchSuccess,
+  fetchError,
   startLoading,
+  resetFlags,
   addAgentSuccessful,
   addAgentFailed,
-  fetchAgentsSuccessful,
-  fetchAgentsFailed,
   updateAgentSuccess,
   updateAgentFailed,
   deleteAgentSuccess,
   apiError,
+  resetAgentsState,
 } = AgentsSlice.actions;
 
 export default AgentsSlice.reducer;

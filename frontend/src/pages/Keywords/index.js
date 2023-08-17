@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Alert, Card, CardBody, Col, Row, Spinner } from "reactstrap";
 import { resetFlags } from "slices/keywords/reducer";
 import { fetchKeywordsList } from "slices/thunk";
 import Breadcrumbs from "../../Components/Common/Breadcrumb";
@@ -89,18 +89,22 @@ const Keywords = () => {
   );
   const dispatch = useDispatch();
 
-  const { data, error } = useSelector((state) => ({
+  const { data, fetchError, fetching } = useSelector((state) => ({
+    fetching: state.Keywords.fetching,
     data: state.Keywords.data,
-    error: state.Keywords.error,
+    fetchError: state.Keywords.fetchError,
   }));
 
   useEffect(() => {
-    dispatch(fetchKeywordsList());
+    if (data.length === 0) {
+      dispatch(fetchKeywordsList());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(error);
-  }, [error]);
+    console.log(fetchError);
+  }, [fetchError]);
   //meta title
   document.title = "Keywords | ";
 
@@ -120,17 +124,27 @@ const Keywords = () => {
             <Col>
               <Card>
                 <CardBody>
-                  <TableContainer
-                    columns={columns}
-                    data={data}
-                    isGlobalFilter={true}
-                    isAddOptions={true}
-                    handleAddOption={toggleAddModal}
-                    customPageSize={10}
-                    theadClass="table-light"
-                    tableClass="table table-bordered dt-responsive nowrap w-100 dataTable no-footer dtr-inline"
-                    customPageSizeOption={true}
-                  />
+                  {fetching && (
+                    <div>
+                      <Spinner size="sm" color="light" className="me-2" />
+                      Fetching Data...
+                    </div>
+                  )}
+                  {fetchError && <Alert color="danger">{fetchError}</Alert>}
+
+                  {!(fetching || fetchError) && (
+                    <TableContainer
+                      columns={columns}
+                      data={data}
+                      isGlobalFilter={true}
+                      isAddOptions={true}
+                      handleAddOption={toggleAddModal}
+                      customPageSize={10}
+                      theadClass="table-light"
+                      tableClass="table table-bordered dt-responsive nowrap w-100 dataTable no-footer dtr-inline"
+                      customPageSizeOption={true}
+                    />
+                  )}
                 </CardBody>
               </Card>
             </Col>

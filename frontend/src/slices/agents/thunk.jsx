@@ -9,8 +9,9 @@ import {
   addAgentSuccessful,
   apiError,
   deleteAgentSuccess,
-  fetchAgentsFailed,
-  fetchAgentsSuccessful,
+  fetchError,
+  fetchSuccess,
+  startFetching,
   startLoading,
   updateAgentFailed,
   updateAgentSuccess,
@@ -28,11 +29,11 @@ export const addAgent = (data) => async (dispatch) => {
 
 export const fetchAgentsList = () => async (dispatch) => {
   try {
-    dispatch(startLoading());
+    dispatch(startFetching());
     const response = await fetchAgents();
-    dispatch(fetchAgentsSuccessful(response.data));
+    dispatch(fetchSuccess(response.data));
   } catch (error) {
-    dispatch(fetchAgentsFailed(error));
+    dispatch(fetchError(error));
   }
 };
 

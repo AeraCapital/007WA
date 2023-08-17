@@ -6,11 +6,13 @@ import {
 } from "../../helpers/backend_helper.js";
 import {
   addKeywordSuccessful,
+  apiError,
   deleteKeywordSuccess,
-  fetchKeywordsSuccessful,
+  fetchError,
+  fetchSuccess,
+  startFetching,
   startLoading,
   updateKeywordSuccess,
-  apiError,
 } from "./reducer.jsx";
 
 export const addKeyword = (data) => async (dispatch) => {
@@ -27,11 +29,11 @@ export const addKeyword = (data) => async (dispatch) => {
 
 export const fetchKeywordsList = () => async (dispatch) => {
   try {
-    dispatch(startLoading());
+    dispatch(startFetching());
     const response = await fetchKeywords();
-    dispatch(fetchKeywordsSuccessful(response.data));
+    dispatch(fetchSuccess(response.data));
   } catch (error) {
-    dispatch(apiError(error));
+    dispatch(fetchError(error));
   }
 };
 
