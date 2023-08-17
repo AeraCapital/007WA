@@ -6,7 +6,6 @@ import ChangePassword from "pages/Authentication/change-password";
 import ForgotPassword from "pages/Authentication/forgot-password";
 import Login from "pages/Authentication/login";
 import Logout from "pages/Authentication/logout";
-import SignUp from "pages/Authentication/register";
 import ResetPassword from "pages/Authentication/reset-password";
 import ResetPasswordSuccess from "pages/Authentication/reset-password-success";
 import UserProfile from "pages/Authentication/user-profile";
@@ -32,7 +31,7 @@ const adminOnlyRoutes = [
 const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgotPassword /> },
-  { path: "/register", component: <SignUp /> },
+  // { path: "/register", component: <SignUp /> },
   { path: "/reset-password/:id", component: <ResetPassword /> },
   { path: "/reset-password-success", component: <ResetPasswordSuccess /> },
 

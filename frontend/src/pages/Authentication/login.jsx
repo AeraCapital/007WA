@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  Alert,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Form,
-  FormFeedback,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
+import
+  {
+    Alert,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    Form,
+    FormFeedback,
+    Input,
+    Label,
+    Row,
+  } from "reactstrap";
 
 import SubmitButton from "Components/submitButton";
 import { useFormik } from "formik"; // Formik validation
@@ -24,8 +25,8 @@ import LogoIcon from "Components/LogoIcon";
 import profile from "../../assets/images/profile-img.png";
 
 //import thunk
-import { loginUser } from "slices/auth/login/thunk";
 import { resetLoginFlag } from "slices/auth/login/reducer";
+import { loginUser } from "slices/auth/login/thunk";
 
 import withRouter from "Components/Common/withRouter";
 
@@ -143,14 +144,14 @@ const Login = (props) => {
                   </div>
                 </CardBody>
               </Card>
-              <div className="text-center">
+              {/* <div className="text-center">
                 <p>
                   Don&apos;t have an account?
                   <Link to="/register" className="m-1 fw-medium text-primary">
                     Signup
                   </Link>
                 </p>
-              </div>
+              </div> */}
             </Col>
           </Row>
         </Container>
