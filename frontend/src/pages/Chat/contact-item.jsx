@@ -24,6 +24,11 @@ const ContactItem = ({ contact }) => {
             </span>
           </div>
           <div>{formatMobileNumber(contact.phone)}</div>
+          {contact.isAutopilot ? (
+            <div className="badge rounded-pill bg-primary  m-2">Autopilot on</div>
+          ) : (
+            <div className="badge rounded-pill bg-danger m-2">Autopilot off</div>
+          )}
         </div>
         {!(contact.newMessageCount === 0) && (
           <span className="badge rounded-pill bg-success position-absolute top-0 end-0 m-2">
