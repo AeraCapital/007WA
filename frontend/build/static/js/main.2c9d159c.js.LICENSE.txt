@@ -5,13 +5,10 @@
 */
 
 /*!
-* metismenujs - v1.4.0
-* MetisMenu: Collapsible menu plugin with Vanilla-JS
-* https://github.com/onokumus/metismenujs#readme
-*
-* Made by Osman Nuri Okumus <onokumus@gmail.com> (https://github.com/onokumus)
-* Under MIT License
-*/
+ * perfect-scrollbar v1.5.3
+ * Copyright 2021 Hyunje Jun, MDBootstrap and Contributors
+ * Licensed under MIT
+ */
 
 /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
