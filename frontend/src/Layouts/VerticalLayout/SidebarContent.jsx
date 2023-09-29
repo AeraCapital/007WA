@@ -14,6 +14,7 @@ const SidebarContent = (props) => {
 
   const navLinks = [
     { path: "/chat", icon: "bx bx-chat", label: "Chat", isAdminOnly: false },
+    { path: "/whatsapp-accounts", icon: "bx bx-collection", label: "Whatsapp Accounts" },
     { path: "/keywords", icon: "bx bx-file", label: "Keywords", isAdminOnly: true },
     { path: "/agents", icon: "bx bx-street-view", label: "Agents", isAdminOnly: true },
     { path: "/messages", icon: "bx bx-collection", label: "Messages", isAdminOnly: true },
