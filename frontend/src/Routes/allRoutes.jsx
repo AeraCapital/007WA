@@ -14,7 +14,7 @@ import Keywords from "pages/Keywords";
 import Messages from "pages/Messages";
 import WhatsappAccountList from "pages/WhatsAppAccount";
 import AddAccount from "pages/WhatsAppAccount/add-account";
-import EditAccount from "pages/WhatsAppAccount/edit-account";
+// import EditAccount from "pages/WhatsAppAccount/edit-account";
 // import WhatsappAccountList from "pages/WhatsappAccount";
 import Pages404 from "../pages/Utility/pages-404";
 
@@ -36,7 +36,7 @@ const adminOnlyRoutes = [
   { path: "/messages", component: <Messages /> },
   { path: "/whatsapp-accounts", component: <WhatsappAccountList /> },
   { path: "/add-account", component: <AddAccount /> },
-  { path: "/edit-account", component: <EditAccount /> },
+  // { path: "/edit-account", component: <EditAccount /> },
 ];
 
 const publicRoutes = [
